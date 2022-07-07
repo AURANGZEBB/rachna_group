@@ -2,10 +2,8 @@
 import datetime
 
 from lxml import etree
-
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -19,6 +17,8 @@ class CounterParty(models.Model):
     _name = "counter.party"
 
     name = fields.Char(string="Name")
+    date = fields.Date(string="Date")
+    detail = fields.Char(string="Detail")
     payment_type = fields.Selection([
         ('receive', 'Receive'),
         ('pay', 'Pay'),
@@ -29,6 +29,7 @@ class CounterParty(models.Model):
         ], string="Transaction With", help="Payment Type", required=True, readonly=True)
     counter_adj_type = fields.Selection([
         ('through_loan', 'Through Loan/Advance'),
+        ('advance_cash_or_bank', 'Loan/Advance in Cash/Bank'),
         ], string="Counter Party Adj. Type", help="Counter Adjustment Type", required=True, default="")
 
     account_debit = fields.Many2one("account.account", string="Debit Account")
@@ -46,6 +47,7 @@ class CounterParty(models.Model):
 
     move_id = fields.Many2one("account.move")
     journal_id = fields.Many2one("account.journal")
+    cash_bank_journals_ids = fields.Many2one("account.journal")
 
 
     @api.onchange('counter_party')
@@ -70,6 +72,16 @@ class CounterParty(models.Model):
 
     counter_party = fields.Many2one("res.partner", string="Counter Party")
 
+    @api.onchange('cash_bank_journals_ids')
+    def onchangejournalid(self):
+        for rec in self:
+            if rec.partner_id:
+                rec.journal_id = rec.cash_bank_journals_ids.id
+                if rec.transaction_with == "customer":
+                    rec.account_debit = rec.cash_bank_journals_ids.default_account_id.id
+                elif rec.transaction_with == "vendor":
+                    rec.account_credit = rec.cash_bank_journals_ids.default_account_id.id
+
     @api.onchange('payment_type')
     def onchangepaymenttype(self):
         for rec in self:
@@ -77,6 +89,13 @@ class CounterParty(models.Model):
                 rec.onchangepartnerid()
             if rec.counter_party:
                 rec.onchange_counterparty()
+
+    @api.onchange('counter_adj_type')
+    def onchangecounteradjtype(self):
+        for rec in self:
+            rec.partner_id = False
+            rec.counter_party = False
+            rec.cash_bank_journals_ids = False
 
     @api.onchange('partner_id')
     def onchangepartnerid(self):
@@ -90,6 +109,12 @@ class CounterParty(models.Model):
                         rec.account_credit = rec.partner_id.property_account_receivable_id.id
                     elif rec.transaction_with == 'vendor':
                         rec.account_credit = rec.partner_id.property_account_payable_id.id
+                elif rec.counter_adj_type == "advance_cash_or_bank":
+                    if rec. transaction_with == 'customer':
+                        rec.credit_partner = rec.partner_id.id
+                        rec.debit_partner = rec.partner_id.id
+                        rec.account_credit = rec.partner_id.advance_loan_account.id
+
             elif rec.payment_type == "pay":
                 if rec.counter_adj_type == "through_loan":
                     rec.debit_partner = rec.partner_id.id
@@ -97,6 +122,11 @@ class CounterParty(models.Model):
                         rec.account_debit = rec.partner_id.property_account_receivable_id.id
                     elif rec.transaction_with == 'vendor':
                         rec.account_debit = rec.partner_id.property_account_payable_id.id
+
+                elif rec.counter_adj_type == "bank_through_loan":
+                    rec.debit_partner = rec.partner_id.id
+                    rec.account_debit = rec.partner_id.advance_loan_account.id
+
     partner_id = fields.Many2one("res.partner", string="Customer/Vendor")
 
     def action_draft(self):
@@ -119,17 +149,18 @@ class CounterParty(models.Model):
             # 'company_id': uid.company_id,
             # 'type': 'entry',
             'state': 'draft',
-            'ref': (self.name or "draft") + '- ' +" " + '- ' + 'Transferred',
+            'ref': (self.detail) + '- ' +" " + '- ' + 'Transferred',
             'line_ids': [(0, 0, {
-                'name': self.name or "draft",
+                'name': self.name or self.detail,
                 'partner_id': self.debit_partner.id,
                 'account_id': self.account_debit.id,
+                'date': self.date,
                 'debit': self.amount}),
                          (0, 0, {
-                             'name': self.name or "draft",
+                             # 'name': self.name or self.detail,
                              'partner_id': self.credit_partner.id,
                              'account_id': self.account_credit.id,
-                             'credit': self.amount
+                             'credit': self.amount,
                          })]
         }
         if not self.move_id:
