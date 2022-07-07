@@ -144,7 +144,7 @@ class CounterParty(models.Model):
     def action_post(self):
         move = {
             'name': self.name,
-            'date': datetime.datetime.today(),
+            'date': self.date or datetime.datetime.today(),
             'journal_id': self.journal_id.id,
             # 'company_id': uid.company_id,
             # 'type': 'entry',
@@ -154,7 +154,6 @@ class CounterParty(models.Model):
                 'name': self.name or self.detail,
                 'partner_id': self.debit_partner.id,
                 'account_id': self.account_debit.id,
-                'date': self.date,
                 'debit': self.amount}),
                          (0, 0, {
                              # 'name': self.name or self.detail,
