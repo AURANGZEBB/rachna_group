@@ -21,6 +21,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'security/ir.model.access.csv',
         'views/counter_party.xml',
         'views/cpp.xml',
+        'views/account_move_line_inherit.xml',
     ],
     'demo': [],
     'installable': True,
