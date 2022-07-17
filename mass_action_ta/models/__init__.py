@@ -1,0 +1,1 @@
+from . import mass_action_account_move

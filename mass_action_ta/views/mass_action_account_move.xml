@@ -1,0 +1,19 @@
+<odoo>
+    <record id="action_mass_reset_account_move_tree_view" model="ir.actions.server">
+        <field name="name">Mass Reset</field>
+        <field name="model_id" ref="mass_action_ta.model_account_move"/>
+        <field name="binding_model_id" ref="mass_action_ta.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.button_draft()</field>
+    </record>
+
+    <record id="action_mass_cancel_account_move_tree_view" model="ir.actions.server">
+        <field name="name">Mass Cancel</field>
+        <field name="model_id" ref="mass_action_ta.model_account_move"/>
+        <field name="binding_model_id" ref="mass_action_ta.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.button_cancel()</field>
+    </record>
+</odoo>
