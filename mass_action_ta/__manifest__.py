@@ -20,6 +20,7 @@ You could use this simplified accounting in case you work with an (external) acc
         # 'security/security.xml',
         # 'security/ir.model.access.csv',
         'views/mass_action_account_move.xml',
+        'views/mass_action_counter_party.xml',
         # 'views/cpp.xml',
         # 'views/account_move_line_inherit.xml',
     ],

@@ -1,0 +1,10 @@
+<odoo>
+    <record id="action_mass_assign_sequence_number_tree_view" model="ir.actions.server">
+        <field name="name">Mass Assign Sequence Number</field>
+        <field name="model_id" ref="mass_action_ta.model_counter_party"/>
+        <field name="binding_model_id" ref="mass_action_ta.model_counter_party"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.assign_seq_custom()</field>
+    </record>
+</odoo>
