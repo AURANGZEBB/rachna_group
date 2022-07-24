@@ -19,6 +19,8 @@ You could use this simplified accounting in case you work with an (external) acc
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'data/automated_action_counter_party.xml',
+        'data/counter_party_sequence.xml',
         'views/counter_party.xml',
         'views/cpp.xml',
         'views/account_move_line_inherit.xml',
