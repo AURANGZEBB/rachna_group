@@ -18,19 +18,19 @@ class CounterParty(models.Model):
 
     name = fields.Char(string="Name")
     date = fields.Date(string="Date", required=True, default=datetime.datetime.today())
-    detail = fields.Char(string="Detail", required=True)
+    detail = fields.Char(string="Detail", required=True, store=True)
     payment_type = fields.Selection([
         ('receive', 'Receive'),
         ('pay', 'Pay'),
-        ], string="Payment Type", help="Payment Type", required=True, default="", readonly=True)
+        ], string="Payment Type", help="Payment Type", required=True, default="")
     transaction_with = fields.Selection([
         ('customer', 'Customer'),
         ('vendor', 'Vendor'),
-        ], string="Transaction With", help="Payment Type", required=True, readonly=True)
+        ], string="Transaction With", help="Payment Type", required=True, store=True)
     counter_adj_type = fields.Selection([
         ('through_loan', 'Through Loan/Advance'),
         ('advance_cash_or_bank', 'Loan/Advance in Cash/Bank'),
-        ], string="Counter Party Adj. Type", help="Counter Adjustment Type", required=True, default="", readonly=True)
+        ], string="Counter Party Adj. Type", help="Counter Adjustment Type", required=True, default="")
 
     account_debit = fields.Many2one("account.account", string="Debit Account")
     account_credit = fields.Many2one("account.account", string="Credit Account")
@@ -62,7 +62,7 @@ class CounterParty(models.Model):
             ], string="Advance State", help="State", required=True, default="none")
 
     advance_status = fields.Selection([])
-    move_id = fields.Many2one("account.move")
+    move_id = fields.Many2one("account.move", copy=False)
     journal_id = fields.Many2one("account.journal")
     cash_bank_journals_ids = fields.Many2one("account.journal")
 
@@ -181,7 +181,7 @@ class CounterParty(models.Model):
             # 'company_id': uid.company_id,
             # 'type': 'entry',
             'state': 'draft',
-            'ref': (self.detail) + '- ' +" " + '- ' + 'Transferred',
+            'ref': str(self.detail) + '- ' +" " + '- ' + 'Transferred',
             'line_ids': [(0, 0, {
                 'name': self.name or self.detail,
                 'partner_id': self.debit_partner.id,
