@@ -8,3 +8,7 @@ class CounterParty(models.Model):
         for rec in self:
             if not rec.name and rec.state == "post":
                 rec.name = rec.move_id.name
+
+    def post_all_draft(self):
+        for rec in self:
+            rec.action_post()

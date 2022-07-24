@@ -15,7 +15,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'category': 'Accounting/Accounting',
     'website': 'https://www.odoo.com/app/invoicing',
     'images' : [],
-    'depends' : ['base', 'account','base_accounting_kit'],
+    'depends' : ['base', 'account','base_accounting_kit','account_cpa'],
     'data': [
         # 'security/security.xml',
         # 'security/ir.model.access.csv',

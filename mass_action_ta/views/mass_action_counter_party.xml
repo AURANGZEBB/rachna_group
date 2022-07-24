@@ -7,4 +7,22 @@
         <field name="state">code</field>
         <field name="code">action = records.assign_seq_custom()</field>
     </record>
+    <record id="action_mass_post_tree_view" model="ir.actions.server">
+        <field name="name">Mass Post</field>
+        <field name="model_id" ref="mass_action_ta.model_counter_party"/>
+        <field name="binding_model_id" ref="mass_action_ta.model_counter_party"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.post_all_draft()
+        </field>
+    </record>
+    <record id="action_mass_on_change_payment_type_tree_view" model="ir.actions.server">
+        <field name="name">Mass OnChange Payment Type</field>
+        <field name="model_id" ref="mass_action_ta.model_counter_party"/>
+        <field name="binding_model_id" ref="mass_action_ta.model_counter_party"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.onchangepaymenttype()</field>
+    </record>
 </odoo>
