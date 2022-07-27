@@ -84,6 +84,7 @@ class CounterParty(models.Model):
                 if rec.counter_adj_type == "through_loan":
                     counter_journal = journals.search([('name', '=', 'Counter Misc. Operations')])
                     rec.credit_partner = rec.counter_party.id
+                    rec.debit_partner = rec.counter_party.id
                     rec.account_credit = rec.counter_party.advance_loan_account.id
                     rec.journal_id = counter_journal
 
@@ -169,6 +170,10 @@ class CounterParty(models.Model):
                         rec.account_credit = rec.partner_id.property_account_receivable_id.id
                     elif rec.transaction_with == "vendor":
                         rec.partner_id.property_account_payable_id.id
+                    if not rec.credit_partner:
+                        rec.credit_partner = rec.partner_id.id
+                    if not rec.debit_partner:
+                        rec.debit_partner = rec.partner_id.id
                     rec.advance_state = "cleared"
                     rec.action_post()
 
