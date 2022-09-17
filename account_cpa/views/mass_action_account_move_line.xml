@@ -1,0 +1,10 @@
+<odoo>
+    <record id="action_mass_generate_detailaccount_move_tree_view" model="ir.actions.server">
+        <field name="name">Mass Run Function Detail</field>
+        <field name="model_id" ref="account_cpa.model_account_move_line"/>
+        <field name="binding_model_id" ref="account_cpa.model_account_move_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.get_detail()</field>
+    </record>
+</odoo>

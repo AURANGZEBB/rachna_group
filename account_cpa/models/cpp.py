@@ -84,7 +84,6 @@ class CounterParty(models.Model):
                 if rec.counter_adj_type == "through_loan":
                     counter_journal = journals.search([('name', '=', 'Counter Misc. Operations')])
                     rec.credit_partner = rec.counter_party.id
-                    rec.debit_partner = rec.counter_party.id
                     rec.account_credit = rec.counter_party.advance_loan_account.id
                     rec.journal_id = counter_journal
 
@@ -96,9 +95,9 @@ class CounterParty(models.Model):
             if rec.partner_id:
                 rec.journal_id = rec.cash_bank_journals_ids.id
                 if rec.transaction_with == "customer":
-                    rec.account_debit = rec.cash_bank_journals_ids.default_debit_account_id.id
+                    rec.account_debit = rec.cash_bank_journals_ids.default_account_id.id
                 elif rec.transaction_with == "vendor":
-                    rec.account_credit = rec.cash_bank_journals_ids.default_credit_account_id.id
+                    rec.account_credit = rec.cash_bank_journals_ids.default_account_id.id
 
     @api.onchange('payment_type')
     def onchangepaymenttype(self):
@@ -169,7 +168,7 @@ class CounterParty(models.Model):
                     if rec.transaction_with == "customer":
                         rec.account_credit = rec.partner_id.property_account_receivable_id.id
                     elif rec.transaction_with == "vendor":
-                        rec.partner_id.property_account_payable_id.id
+                        rec.account_debit = rec.partner_id.property_account_payable_id.id
                     if not rec.credit_partner:
                         rec.credit_partner = rec.partner_id.id
                     if not rec.debit_partner:

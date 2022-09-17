@@ -28,6 +28,7 @@
 					<button name="action_post" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="v"/>
 					<button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary" attrs="{'invisible': [('state', 'not in', ('post', 'cancel'))]}" groups="account.group_account_invoice" data-hotkey="w"/>
 					<button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="z"/>
+					<button name="clear_advance" string="Clear Advance" type="object" attrs="{'invisible': [('state', '!=', 'posted'),('advance_state', '!=', 'pending')]}"/>
 					<field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
 				</header>
 				<header name="header_2">
@@ -83,7 +84,7 @@
 	   	<field name="name">Counter Party Customer Payment</field>
 	   	<field name="res_model">counter.party</field>
 	   	<field name="view_mode">tree,form</field>
-		<field name="context">{'default_transaction_with': 'customer'}</field>
+		<field name="context">{'default_transaction_with': 'customer', 'default_payment_type': 'receive'}</field>
 		<field name="domain">[('transaction_with', '=', 'customer')]</field>
 	   	<field name="help" type="html">
 		   <p class="o_view_nocontent_smiling_face">
@@ -96,7 +97,7 @@
 	   <field name="name">Counter Party Vendor Payment/Receipt</field>
 	   <field name="res_model">counter.party</field>
 	   <field name="view_mode">tree,form</field>
-	   <field name="context">{'default_transaction_with': 'vendor'}</field>
+	   <field name="context">{'default_transaction_with': 'vendor', 'default_payment_type': 'pay'}</field>
 		<field name="domain">[('transaction_with', '=', 'vendor')]</field>
 <!--	   <field name="domain">[('transaction_with', '=', 'vendor')]</field>-->
 <!--	   <field name="view_id" ref="customer_details_tree"/>-->
