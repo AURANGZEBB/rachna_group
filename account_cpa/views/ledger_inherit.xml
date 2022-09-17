@@ -6,10 +6,10 @@
 	    <field name="inherit_id" ref="account.view_move_line_tree_grouped_partner"/>
 	    <field name="arch" type="xml">
 			<xpath expr="//field[@name='date_maturity']" position="after">
-				<field name="x_detail"/>
-				<field name="x_qty"/>
-				<field name="x_discount"/>
-				<field name="x_amount"/>
+				<field name="x_detail" optional="hide"/>
+				<field name="x_qty" optional="hide"/>
+				<field name="x_discount" optional="hide"/>
+				<field name="x_amount" optional="hide"/>
 			</xpath>
         </field>
     </record>

@@ -24,7 +24,7 @@ class AccountMoveLine(models.Model):
                 jv = rec.search([('move_id', '=', rec.move_id.id),('account_id', '!=', rec.account_id.id)])
                 for record in jv:
                     x_detail = x_detail + (record.product_id.name or "Payment") + "\n"
-                    x_amount = x_amount + str(record.price_subtotal or rec.debit or -rec.credit or 0.0) + "\n"
+                    x_amount = x_amount + str(record.price_subtotal or 0.0) + "\n"
                     x_qty = x_qty + (str(record.quantity or 0.0) + "\n") if rec.price_subtotal else "0.0"
                     x_discount = ((record.price_unit * record.quantity * record.discount/100) or "0.0" + "\n") if record.discount else "0.0"
                     rec.x_detail = x_detail
