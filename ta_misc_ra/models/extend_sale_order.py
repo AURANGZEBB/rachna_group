@@ -9,5 +9,7 @@ class SaleOrder(models.Model):
     
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
+        invoice_vals['courier_number'] = self.courier_number
+        invoice_vals['other_detail'] = self.other_detail
         invoice_vals['batch_number'] = self.batch_number.id
         return invoice_vals

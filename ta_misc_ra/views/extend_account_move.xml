@@ -5,6 +5,10 @@
 	    <field name="inherit_id" ref="account.view_move_form"/>
 	    <field name="arch" type="xml">
 			<xpath expr="//group[@id='header_right_group']" position="inside">
+				<lable for="courier_number"/>
+				<field name="courier_number" attrs="{'readonly':[('state', 'not in', ['draft'])]}"/>
+				<lable for="other_detail"/>
+				<field name="other_detail" attrs="{'readonly':[('state', 'not in', ['draft'])]}"/>
 				<lable for="batch_number"/>
 				<field name="batch_number" attrs="{'readonly':[('state', 'not in', ['draft'])]}"/>
 			</xpath>
