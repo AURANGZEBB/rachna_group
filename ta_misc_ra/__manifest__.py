@@ -12,7 +12,7 @@
     'contributors': [
         'Mathias Markl <mathias.markl@mukit.at>',
     ],
-    'depends': ['base','mrp','sale_management'],
+    'depends': ['base','mrp','sale_management','account'],
     'excludes': [
         'web_enterprise',
     ],
@@ -21,6 +21,7 @@
         'views/ta_batch.xml',
         'views/extend_mrp_production.xml',
         'views/extend_sale_order.xml',
+        'views/extend_account_move.xml',
     ],
     'assets': {
         'web.assets_qweb': [],
