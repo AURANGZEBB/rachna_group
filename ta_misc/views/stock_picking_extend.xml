@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="stock_picking_inherit_form" model="ir.ui.view">
+        <field name="name">stock.picking.inherit.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_id']" position="after">
+                <field name="is_khi" invisible="1"/>
+                <field name="operation_type_ids" invisible="1"/>
+                <field name="validated_by" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="after">
+                <field name="preferred_courier" invisible="0"/>
+            </xpath>
+            <xpath expr="//page[@name='operations']/field/tree/field[@name='forecast_availability']" position="after">
+                <field name="x_packaging" invisible="0"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('is_khi', '=', is_khi),('is_company', '=', False)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                <attribute name="domain">[('id', 'in', operation_type_ids)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

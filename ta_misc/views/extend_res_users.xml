@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="extend_res_users_form" model="ir.ui.view">
+        <field name="name">extend.res.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tz']" position="after">
+                <field name="initials"/>
+                <field name="is_khi"/>
+                <field name="route_ids" domain="[('sale_selectable','=',True)]" required="1"/>
+                <field name="operation_type_ids"/>
+                <field name="journal_ids"/>
+                <field name="order_types" required="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

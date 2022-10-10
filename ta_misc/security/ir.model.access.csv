@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ta_brand_manager,access.ta.brand.manager,model_ta_brand,,1,1,1,1
+access_courier_service_provider_manager,access.courier.service.provider.manager,model_courier_service_provider,,1,1,1,1
