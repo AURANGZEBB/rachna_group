@@ -16,7 +16,8 @@ class StockPicking(models.Model):
     is_khi = fields.Boolean(string="Is KHI", related="user_id.is_khi")
     operation_type_ids = fields.Many2many("stock.picking.type", string="Operation Types Allowed", related="user_id.operation_type_ids")
     validated_by = fields.Many2one("res.users", string="Validated By")
-    preferred_courier = fields.Many2one("courier.service.provider", string="Preferred Courier", related="partner_id.preferred_courier")
+    preferred_courier = fields.Many2one("courier.service.provider", string="Preferred Courier")
+    booking_type = fields.Many2one("booking.type", string="Booking Type")
 
     def button_validate(self):
         rtn = super(StockPicking, self).button_validate()
@@ -90,6 +91,8 @@ class StockRule(models.Model):
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),
             'x_packaging': self.env['sale.order.line'].search([('id', '=', values.get('sale_line_id'))]).product_packaging.id,
+            'preferred_courier': product_id.preferred_courier,
+            'booking_type': product_id.booking_type,
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
         }
         for field in self._get_custom_move_fields():

@@ -9,3 +9,4 @@ class ResPartner(models.Model):
     default_discount_percentage = fields.Float(string="Default Discount in %")
     is_khi = fields.Boolean(string="IS KHI")
     preferred_courier = fields.Many2one("courier.service.provider", string="Preferred Courier")
+    booking_type = fields.Many2one("booking.type", string="Booking Type")

@@ -12,6 +12,7 @@
             </xpath>
             <xpath expr="//field[@name='location_id']" position="after">
                 <field name="preferred_courier" invisible="0"/>
+                <field name="booking_type" invisible="0"/>
             </xpath>
             <xpath expr="//page[@name='operations']/field/tree/field[@name='forecast_availability']" position="after">
                 <field name="x_packaging" invisible="0"/>

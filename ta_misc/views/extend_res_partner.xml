@@ -10,6 +10,7 @@
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="preferred_courier"/>
+                <field name="booking_type"/>
                 <field name="ntn"/>
                 <field name="cnic"/>
                 <field name="contact_person"/>
