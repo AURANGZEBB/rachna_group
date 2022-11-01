@@ -6,8 +6,6 @@
 	    <field name="arch" type="xml">
 			<xpath expr="//field[@name='worked_hours']" position="replace">
 			</xpath>
-			<xpath expr="//field[@name='worked_hours']" position="replace">
-			</xpath>
 			<xpath expr="//field[@name='employee_id']" position="after">
 				<field name="shift_id"/>
 				<field name="standard_work_hours" widget="float_time"/>
