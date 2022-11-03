@@ -1,0 +1,19 @@
+<odoo>
+<!--    <report-->
+<!--        id="payroll_report"-->
+<!--        model="payroll.report.wizard"-->
+<!--        string="Payroll Report Print"-->
+<!--        report_type="xlsx"-->
+<!--        name="ta_hrm.payroll_report_xlsx"-->
+<!--        file="payroll_report"-->
+<!--        attachment_use="False"-->
+<!--    />-->
+    <record id="payroll_report" model="ir.actions.report">
+        <field name="name">payroll_report_xlsx</field>
+        <field name="model">payroll.report.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ta_hrm.payroll_report_xlsx</field>
+        <field name="report_file">ta_hrm.payroll_report_xlsx</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

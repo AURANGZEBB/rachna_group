@@ -12,8 +12,15 @@
     "depends": [
             "hr",
             "hr_attendance",
+            "report_xlsx",
+            "hr_payroll_community",
+            "hr_zk_attendance",
                 ],
     "data": [
+        "security/ir.model.access.csv",
         "views/attendance_list_inherit.xml",
+        "report/payroll_report_xlsx_call.xml",
+        "report/payroll_report_wizard.xml",
+
     ],
 }
