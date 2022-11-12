@@ -9,8 +9,9 @@
 				<field name="courier_number" attrs="{'readonly':[('state', 'not in', ['draft'])]}"/>
 				<lable for="other_detail"/>
 				<field name="other_detail" attrs="{'readonly':[('state', 'not in', ['draft'])]}"/>
-				<lable for="batch_number"/>
-				<field name="batch_number" attrs="{'readonly':[('state', 'not in', ['draft'])]}"/>
+			</xpath>
+			<xpath expr="//tree/field[@name='name']" position="after">
+				<field name="batch_number"/>
 			</xpath>
         </field>
     </record>
@@ -20,7 +21,8 @@
 	    <field name="inherit_id" ref="account.view_out_invoice_tree"/>
 	    <field name="arch" type="xml">
 			<xpath expr="//field[@name='invoice_partner_display_name']" position="after">
-				<field name="batch_number"/>
+				<field name="courier_number"/>
+				<field name="other_detail"/>
 			</xpath>
         </field>
     </record>

@@ -26,7 +26,7 @@
 	</record>
 
 	<record id="action_ta_batch" model="ir.actions.act_window">
-	   	<field name="name">Batach Number</field>
+	   	<field name="name">Batch Number</field>
 	   	<field name="res_model">ta.batch</field>
 	   	<field name="view_mode">tree,form</field>
 		<field name="context">{}</field>
@@ -41,7 +41,7 @@
 
 	<menuitem id="menu_ta_batch"
          name="Batch Number"
-         parent="mrp.menu_mrp_config"
+         parent="mrp.menu_mrp_configuration"
          action="action_ta_batch"
-         sequence="0"/>
+         sequence="100"/>
 </odoo>
