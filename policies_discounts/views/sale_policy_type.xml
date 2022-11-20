@@ -1,0 +1,50 @@
+<odoo>
+	<record id="ta_sale_policy_type_tree" model="ir.ui.view">
+	    <field name="name">ta.sale.policy.type.tree</field>
+	    <field name="model">sale.policy.type</field>
+	    <field name="arch" type="xml">
+			<tree>
+				<field name="name" required="1"/>
+				<field name="description"/>
+				<field name="calc_type" required="1"/>
+			</tree>
+        </field>
+    </record>
+
+	<record id="ta_sale_policy_type_form" model="ir.ui.view">
+	    <field name="name">ta.sale.policy.type.tree</field>
+	    <field name="model">sale.policy.type</field>
+	    <field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<field name="name" required="1"/>
+						<field name="description"/>
+						<field name="calc_type" required="1"/>
+					</group>
+				</group>
+			</form>
+        </field>
+    </record>
+
+	<record id="action_ta_sale_policy_type" model="ir.actions.act_window">
+	   <field name="name">Policy Type</field>
+	   <field name="res_model">sale.policy.type</field>
+	   <field name="view_mode">tree,form</field>
+	   <field name="context">{}</field>
+		<field name="domain">[]</field>
+<!--	   <field name="domain">[('transaction_with', '=', 'vendor')]</field>-->
+<!--	   <field name="view_id" ref="customer_details_tree"/>-->
+	   <field name="help" type="html">
+		   <p class="o_view_nocontent_smiling_face">
+			   Create Your Policy Type Here!
+		   </p>
+	   </field>
+	</record>
+
+	<menuitem id="menu_ta_sale_policy_type"
+	 name="Policy Type"
+	 parent="sale.menu_sale_config"
+	 action="action_ta_sale_policy_type"
+	 sequence="100"/>
+</odoo>

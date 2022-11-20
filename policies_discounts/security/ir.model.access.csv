@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_policy_type_manager,access.sale.policy.type.manager,model_sale_policy_type,,1,1,1,1
+access_sale_policy_benefit_manager,access.sale.policy.benefit.manager,model_sale_policy_benefit,,1,1,1,1
+access_sale_policy_manager,access.sale.policy.manager,model_sale_policy,,1,1,1,1
+access_sale_policy_line_manager,access.sale.policy.line.manager,model_sale_policy_line,,1,1,1,1
