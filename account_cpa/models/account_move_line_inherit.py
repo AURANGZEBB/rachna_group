@@ -10,6 +10,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    account_type = fields.Many2one("account.account.type", string="Account Type", related="account_id.user_type_id", store=True)
     product_category = fields.Many2one("product.category", string="Product Category", related="product_id.categ_id", store=True)
 
     @api.depends('product_id', 'quantity' ,'price_unit', 'discount')
