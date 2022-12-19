@@ -19,8 +19,8 @@ class PayrollReportXlsx(models.AbstractModel):
 
     def generate_xlsx_report(self, workbook, data, lines):
         filtered_object = self.env['hr.payslip'].search([('date_from', '>=', data['date_from']),
-                                                 ('date_to', '=', data['date_to'])
-                                                 ])
+                                                 ('date_to', '=', data['date_to']),
+                                                 ('state', 'in', ['draft', 'done'])])
         rule_list = self.env['hr.salary.rule'].search([('appears_on_payslip', '=', True)])
         H1 = workbook.add_format({'font_size': 28, 'align': 'center', 'bold': True})
         H3 = workbook.add_format({'font_size': 14, 'align': 'center', 'bold': True})
