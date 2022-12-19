@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+
 class PayrollReportWizard(models.TransientModel):
     _name = "payroll.report.wizard"
 
@@ -40,11 +41,12 @@ class PayrollReportXlsx(models.AbstractModel):
         sheet.write(6, 5, "Reference", H4)
         sheet.write(6, 6, "From", H4)
         sheet.write(6, 7, "To", H4)
+        sheet.write(6, 8, "State", H4)
         # sheet.write(6, 11, "Worked Days", H4)
         # sheet.write(6, 12, "OT Hours", H4)
         # sheet.write(6, 13, "Late In", H4)
         # sheet.write(6, 14, "Early Out", H4)
-        count = 7
+        count = 8
         max_len = len(rule_list)
         heads_location = []
         if count != max_len:
@@ -72,6 +74,7 @@ class PayrollReportXlsx(models.AbstractModel):
             sheet.write(row, 5, rec.number)
             sheet.write(row, 6, rec.date_from, date_format)
             sheet.write(row, 7, rec.date_to, date_format)
+            sheet.write(row, 8, rec.state.upper())
             # if rec.actual_worked_days_ids:
             #     sheet.write(row, 11, rec.actual_worked_days_ids[0].number_of_days if
             #                                         rec.actual_worked_days_ids[0].number_of_days else "")

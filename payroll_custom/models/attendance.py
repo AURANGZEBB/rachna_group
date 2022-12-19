@@ -27,7 +27,7 @@ class HrAttendance(models.Model):
 
     def get_status(self):
         for rec in self:
-            present_hrs =  5
+            present_hrs = 5
             half_day_hrs = 3
 
             if rec.worked_hours >= present_hrs:

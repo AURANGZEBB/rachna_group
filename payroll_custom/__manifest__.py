@@ -19,6 +19,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/attendance_list_inherit.xml",
+        "views/payslip_extend.xml",
         "report/payroll_report_xlsx_call.xml",
         "report/payroll_report_wizard.xml",
 

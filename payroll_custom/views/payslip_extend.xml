@@ -1,0 +1,14 @@
+<odoo>
+	<record id="view_payslip_inherit_custom_tree" model="ir.ui.view">
+	    <field name="name">view.payslip.inherit.custom.tree</field>
+	    <field name="model">hr.payslip</field>
+	    <field name="inherit_id" ref="hr_payroll_community.view_hr_payslip_tree"/>
+	    <field name="arch" type="xml">
+			<xpath expr="//tree" position="inside">
+				<header>
+					<button name="mass_compute_sheet" string="Compute Sheet" type="object"/>
+				</header>
+			</xpath>
+        </field>
+    </record>
+</odoo>
