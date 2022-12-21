@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tax_report_wizard_manager,access.tax.report.wizard.manager,model_tax_report_wizard,,1,1,1,1
