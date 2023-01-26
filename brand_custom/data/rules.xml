@@ -1,0 +1,7 @@
+<odoo>
+    <record id="brand_custom_rule_multicompany" model="ir.rule">
+        <field name="name">Brand Custom Multi-Company</field>
+        <field name="model_id" ref="model_brand_custom"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>
