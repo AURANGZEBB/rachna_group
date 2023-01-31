@@ -23,6 +23,17 @@
 						<field name="company_id" invisible="1"/>
 					</group>
 				</group>
+				<notebook>
+					<page string="Purchase Orders">
+						<field name="purchase_order_ids" readonly="1"/>
+					</page>
+					<page string="Bills">
+						<field name="account_move_ids" readonly="1"/>
+					</page>
+					<page string="Payments">
+						<field name="account_payment_ids" readonly="1"/>
+					</page>
+				</notebook>
 			</form>
         </field>
     </record>
