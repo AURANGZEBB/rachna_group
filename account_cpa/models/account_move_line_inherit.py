@@ -15,25 +15,8 @@ class AccountMoveLine(models.Model):
     product_category = fields.Many2one("product.category", string="Product Category", related="product_id.categ_id", store=True)
     policy_id = fields.Many2one("sale.policy", string="Policy")
     policy_line_ids = fields.Many2many("sale.policy.line", string="Policy Lines")
-    sales_person_id = fields.Many2one("res.users", related="move_id.invoice_user_id", store=True)
-    sales_team_id = fields.Many2one("crm.team", related="move_id.team_id", store=True)
-
-    def get_sales_person_on_payment(self):
-        for rec in self:
-            if rec.move_id.payment_id and rec.move_id.journal_id.type == "cash" or rec.move_id.journal_id.type == "bank":
-                if rec.move_id.payment_id.reconciled_invoice_ids:
-                    var_salesperson = rec.move_id.payment_id.reconciled_invoice_ids[0].invoice_user_id.id
-                    var_salesteam = rec.move_id.payment_id.reconciled_invoice_ids[0].team_id
-                    rec.move_id.invoice_user_id = var_salesperson
-                    rec.move_id.team_id = var_salesteam.id if var_salesteam else ""
-                    print(var_salesperson,"---", rec.move_id.invoice_user_id)
-                    rec.eval_function = None
-                    print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
-            else:
-                rec.eval_function = None
-                print("elseesleeslelselseleslselseleslselsel")
-
-    eval_function = fields.Char(string="Sales Person ID Custom", compute="get_sales_person_on_payment")
+    sales_person_id = fields.Many2one("res.users", related="partner_id.user_id", store=True)
+    sales_team_id = fields.Many2one("crm.team", related="partner_id.team_id", store=True)
 
     @api.depends('product_id', 'quantity' ,'price_unit', 'discount')
     def get_detail(self):
