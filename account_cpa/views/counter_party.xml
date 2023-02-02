@@ -44,14 +44,15 @@
 					</div>
 					<group>
 						<group>
-							<field name="payment_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+							<field name="payment_type" attrs="{'readonly': ['|', ('counter_adj_type', 'in', ['advance_against_policy', 'transfer_advance_between_policy', 'return_advance_against_policy']),('state', '!=', 'draft')]}"/>
 							<field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 							<field name="detail" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 							<field name="counter_adj_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 							<field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+							<field name="policy_id" string="Policy" options="{'no_create': True, 'no_quick_create': True}" attrs="{'invisible': [('counter_adj_type', 'not in', ['advance_against_policy', 'return_advance_against_policy'])],'readonly': [('state', 'not in', ['draft'])]}"/>
 							<field name="cash_bank_journals_ids" attrs="{'readonly': [('state', '!=', 'draft'),
 																		(('counter_adj_type', '!=', 'advance_cash_or_bank'))],
-																		'invisible':[('counter_adj_type', '!=', 'advance_cash_or_bank')]}"
+																		'invisible':[('counter_adj_type', 'not in', ['advance_cash_or_bank', 'advance_against_policy', 'return_advance_against_policy'])]}"
 																		 domain="[('type', 'in', ['bank', 'cash'])]"/>
 							<field name="counter_party" attrs="{'readonly': [('state', '!=', 'draft'),
 																('counter_adj_type', '!=', 'through_loan')],
@@ -60,6 +61,9 @@
 					</group>
 					<group>
 						<group>
+							<field name="policy_id" string="From Policy" options="{'no_create': True, 'no_quick_create': True}" attrs="{'invisible': [('counter_adj_type', '!=', 'transfer_advance_between_policy')],
+																				'readonly': [('state', '!=', 'draft')]}"/>
+							<field name="debit_policy" readonly="1" force_save="1"/>
 							<field name="account_debit" readonly="1" force_save="1"/>
 							<field name="debit_partner" readonly="1" force_save="1"/>
 							<field name="currency_id" readonly="0"/>
@@ -69,6 +73,9 @@
 							<field name="move_id" readonly="1" force_save="1"/>
 						</group>
 						<group>
+							<field name="to_policy_id" string="To Policy" options="{'no_create': True, 'no_quick_create': True}" attrs="{'invisible': [('counter_adj_type', '!=', 'transfer_advance_between_policy')],
+																				'readonly': [('state', '!=', 'draft')]}"/>
+							<field name="credit_policy" readonly="1" force_save="1"/>
 							<field name="account_credit" readonly="1" force_save="1"/>
 							<field name="credit_partner" readonly="1" force_save="1"/>
 							<field name="transaction_with" readonly="1"/>

@@ -22,6 +22,7 @@ class CounterParty(models.Model):
     payment_type = fields.Selection([
         ('receive', 'Receive'),
         ('pay', 'Pay'),
+        ('transfer', 'Transfer'),
         ], string="Payment Type", help="Payment Type", required=True, default="")
     transaction_with = fields.Selection([
         ('customer', 'Customer'),
@@ -30,8 +31,15 @@ class CounterParty(models.Model):
     counter_adj_type = fields.Selection([
         ('through_loan', 'Through Loan/Advance'),
         ('advance_cash_or_bank', 'Loan/Advance in Cash/Bank'),
+        ('advance_against_policy', 'Advance Against Policy'),
+        ('transfer_advance_between_policy', 'Transfer Advance Between Policy'),
+        ('return_advance_against_policy', 'Return Advance Against Policy'),
         ], string="Counter Party Adj. Type", help="Counter Adjustment Type", required=True, default="")
 
+    policy_id = fields.Many2one("sale.policy", string="Policy")
+    to_policy_id = fields.Many2one("sale.policy", string="To Policy")
+    debit_policy = fields.Many2one("sale.policy", string="Debit Policy")
+    credit_policy = fields.Many2one("sale.policy", string="Credit Policy")
     account_debit = fields.Many2one("account.account", string="Debit Account")
     account_credit = fields.Many2one("account.account", string="Credit Account")
     debit_partner = fields.Many2one("res.partner", string="Debit Partner")
@@ -66,6 +74,10 @@ class CounterParty(models.Model):
     journal_id = fields.Many2one("account.journal")
     cash_bank_journals_ids = fields.Many2one("account.journal")
 
+    @api.onchange('policy_id', 'to_policy_id')
+    def onchange_policy(self):
+        for rec in self:
+            rec.onchangepartnerid()
 
     @api.onchange('counter_party')
     def onchange_counterparty(self):
@@ -94,7 +106,11 @@ class CounterParty(models.Model):
         for rec in self:
             if rec.partner_id:
                 rec.journal_id = rec.cash_bank_journals_ids.id
-                if rec.transaction_with == "customer":
+                if rec.transaction_with == "customer" and rec.payment_type == "receive":
+                    rec.account_debit = rec.cash_bank_journals_ids.default_account_id.id
+                elif rec.transaction_with == "customer" and rec.payment_type == "pay":
+                    rec.account_credit = rec.cash_bank_journals_ids.default_account_id.id
+                elif rec.transaction_with == "customer":
                     rec.account_debit = rec.cash_bank_journals_ids.default_account_id.id
                 elif rec.transaction_with == "vendor":
                     rec.account_credit = rec.cash_bank_journals_ids.default_account_id.id
@@ -106,6 +122,9 @@ class CounterParty(models.Model):
                 rec.onchangepartnerid()
             if rec.counter_party:
                 rec.onchange_counterparty()
+            if rec.payment_type == "transfer" and rec.counter_adj_type != "transfer_advance_between_policy":
+                rec.payment_type = ""
+                raise ValidationError("You cannot select transfer !!!")
 
     @api.onchange('counter_adj_type')
     def onchangecounteradjtype(self):
@@ -113,6 +132,22 @@ class CounterParty(models.Model):
             rec.partner_id = False
             rec.counter_party = False
             rec.cash_bank_journals_ids = False
+            if rec.counter_adj_type == "advance_against_policy":
+                rec.payment_type = "receive"
+                if rec.transaction_with != "customer":
+                    raise ValidationError("You cannot select this on vendor")
+            elif rec.counter_adj_type == "return_advance_against_policy":
+                rec.payment_type = "pay"
+                if rec.transaction_with != "customer":
+                    raise ValidationError("You cannot select this on vendor")
+            elif rec.counter_adj_type == "transfer_advance_between_policy":
+                rec.payment_type = "transfer"
+                if rec.transaction_with != "customer":
+                    raise ValidationError("You cannot select this on vendor")
+            elif rec.payment_type == "transfer":
+                rec.payment_type = ""
+                if rec.transaction_with != "customer":
+                    raise ValidationError("You cannot select this on vendor")
 
     @api.onchange('partner_id')
     def onchangepartnerid(self):
@@ -126,12 +161,26 @@ class CounterParty(models.Model):
                         rec.account_credit = rec.partner_id.property_account_receivable_id.id
                     elif rec.transaction_with == 'vendor':
                         rec.account_credit = rec.partner_id.property_account_payable_id.id
+
                 elif rec.counter_adj_type == "advance_cash_or_bank":
                     if rec. transaction_with == 'customer':
                         rec.advance_state = "pending"
                         rec.credit_partner = rec.partner_id.id
                         rec.debit_partner = rec.partner_id.id
                         rec.account_credit = rec.partner_id.advance_loan_account.id
+
+                elif rec.counter_adj_type == "advance_against_policy":
+                    if rec.policy_id:
+                        rec.credit_policy = rec.policy_id.id
+                        rec.debit_policy = rec.policy_id.id
+                    if rec.partner_id:
+                        rec.credit_partner = rec.partner_id.id
+                        rec.debit_partner = rec.partner_id.id
+                        if rec.partner_id.property_account_receivable_id:
+                            rec.account_credit = rec.partner_id.property_account_receivable_id.id
+                        else:
+                            raise ValidationError("Accounts are not selected on Partner Form !!!!")
+
 
             elif rec.payment_type == "pay":
                 if rec.counter_adj_type == "through_loan":
@@ -145,6 +194,32 @@ class CounterParty(models.Model):
                     rec.advance_state = "pending"
                     rec.debit_partner = rec.partner_id.id
                     rec.account_debit = rec.partner_id.advance_loan_account.id
+
+                elif rec.counter_adj_type == "return_advance_against_policy":
+                    if rec.policy_id:
+                        rec.credit_policy = rec.policy_id.id
+                        rec.debit_policy = rec.policy_id.id
+                    if rec.partner_id:
+                        rec.credit_partner = rec.partner_id.id
+                        rec.debit_partner = rec.partner_id.id
+                        if rec.partner_id.property_account_receivable_id:
+                            rec.account_debit = rec.partner_id.property_account_receivable_id.id
+                        else:
+                            raise ValidationError("Accounts are not selected on Partner Form !!!!")
+
+            elif rec.payment_type == "transfer":
+                if rec.counter_adj_type == "transfer_advance_between_policy":
+                    if rec.policy_id and rec.to_policy_id:
+                        rec.credit_policy = rec.to_policy_id.id
+                        rec.debit_policy = rec.policy_id.id
+                    if rec.partner_id:
+                        rec.credit_partner = rec.partner_id.id
+                        rec.debit_partner = rec.partner_id.id
+                        if rec.partner_id.property_account_receivable_id:
+                            rec.account_debit = rec.partner_id.property_account_receivable_id.id
+                            rec.account_credit = rec.partner_id.property_account_receivable_id.id
+                        else:
+                            raise ValidationError("Accounts are not selected on Partner Form !!!!")
 
     partner_id = fields.Many2one("res.partner", string="Customer/Vendor")
 
@@ -208,4 +283,5 @@ class CounterParty(models.Model):
             move_id.post()
 
         self.state = "post"
+
         return self.write({'move_id': move_id.id})

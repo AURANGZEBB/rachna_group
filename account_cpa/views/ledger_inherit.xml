@@ -11,6 +11,11 @@
 				<field name="x_discount" optional="hide"/>
 				<field name="x_amount" optional="hide"/>
 			</xpath>
+			<xpath expr="//field[@name='partner_id']" position="after">
+				<field name="sales_team_id" optional="hide"/>
+				<field name="sales_person_id" optional="hide"/>
+				<field name="eval_function" invisible="1"/>
+			</xpath>
         </field>
     </record>
 </odoo>
