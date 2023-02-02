@@ -17,6 +17,7 @@ class AccountMoveLine(models.Model):
     policy_line_ids = fields.Many2many("sale.policy.line", string="Policy Lines")
     sale_person_id = fields.Many2one("res.users", string="Sales Person ID", related="partner_id.user_id", store=True)
     sale_team_id = fields.Many2one("crm.team", string="Sales Team ID", related="partner_id.team_id", store=True)
+    customer_rank = fields.Integer(string="Customer Rank", related="partner_id.customer_rank", store=True)
 
     @api.depends('product_id', 'quantity' ,'price_unit', 'discount')
     def get_detail(self):

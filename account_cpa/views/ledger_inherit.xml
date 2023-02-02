@@ -14,6 +14,7 @@
 			<xpath expr="//field[@name='partner_id']" position="after">
 				<field name="sale_team_id" optional="hide"/>
 				<field name="sale_person_id" optional="hide"/>
+				<field name="customer_rank" optional="hide"/>
 			</xpath>
         </field>
     </record>
