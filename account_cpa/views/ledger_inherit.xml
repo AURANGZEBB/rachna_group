@@ -12,8 +12,8 @@
 				<field name="x_amount" optional="hide"/>
 			</xpath>
 			<xpath expr="//field[@name='partner_id']" position="after">
-				<field name="sales_team_id" optional="hide"/>
-				<field name="sales_person_id" optional="hide"/>
+				<field name="sale_team_id" optional="hide"/>
+				<field name="sale_person_id" optional="hide"/>
 			</xpath>
         </field>
     </record>

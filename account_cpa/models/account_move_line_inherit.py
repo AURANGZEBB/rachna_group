@@ -15,8 +15,8 @@ class AccountMoveLine(models.Model):
     product_category = fields.Many2one("product.category", string="Product Category", related="product_id.categ_id", store=True)
     policy_id = fields.Many2one("sale.policy", string="Policy")
     policy_line_ids = fields.Many2many("sale.policy.line", string="Policy Lines")
-    sales_person_id = fields.Many2one("res.users", related="partner_id.user_id", store=True)
-    sales_team_id = fields.Many2one("crm.team", related="partner_id.team_id", store=True)
+    sale_person_id = fields.Many2one("res.users", string="Sales Person ID", related="partner_id.user_id", store=True)
+    sale_team_id = fields.Many2one("crm.team", string="Sales Team ID", related="partner_id.team_id", store=True)
 
     @api.depends('product_id', 'quantity' ,'price_unit', 'discount')
     def get_detail(self):
