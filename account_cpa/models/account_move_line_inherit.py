@@ -43,3 +43,7 @@ class AccountMoveLine(models.Model):
     x_qty = fields.Text(string="Qty", compute="get_detail", store=True)
     x_amount = fields.Text(string="Amount", compute="get_detail", store=True)
     x_discount = fields.Text(string="Discount", compute="get_detail", store=True)
+
+    @api.model
+    def today_filter(self):
+        return [('date', '=', fields.Date.today())]

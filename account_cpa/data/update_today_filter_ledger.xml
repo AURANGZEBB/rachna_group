@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <record id="account_cpa_today_filter_action" model="ir.actions.server">
+            <field name="name">Update Today's Records Filter</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="code">
+model = self.env['account.move.line']
+model.today_filter()
+            </field>
+        </record>
+    </data>
+</odoo>

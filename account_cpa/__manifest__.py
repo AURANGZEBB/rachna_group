@@ -26,6 +26,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/cpp.xml',
         'views/account_move_line_inherit.xml',
         'views/ledger_inherit.xml',
+        'views/search_view_inherit_ledger.xml',
+        'data/update_today_filter_ledger.xml',
     ],
     'demo': [],
     'installable': True,

@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record id="search_view_inherit_multiple" model="ir.ui.view">
+            <field name="name">Search View Inherit Multiple</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/filter" position="after">
+                    <filter name="Today's Records" domain="[('date', '=', context_today().strftime('%d-%m-%Y'))]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
