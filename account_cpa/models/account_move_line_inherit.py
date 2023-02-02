@@ -22,9 +22,11 @@ class AccountMoveLine(models.Model):
         for rec in self:
             if rec.move_id.payment_id and rec.move_id.journal_id.type == "cash" or rec.move_id.journal_id.type == "bank":
                 if rec.move_id.payment_id.reconciled_invoice_ids:
-                    var = rec.move_id.payment_id.reconciled_invoice_ids[0].invoice_user_id.id
-                    rec.move_id.invoice_user_id = var
-                    print(var,"---", rec.move_id.invoice_user_id)
+                    var_salesperson = rec.move_id.payment_id.reconciled_invoice_ids[0].invoice_user_id.id
+                    var_salesteam = rec.move_id.payment_id.reconciled_invoice_ids[0].team_id
+                    rec.move_id.invoice_user_id = var_salesperson
+                    rec.move_id.team_id = var_salesteam.id if var_salesteam else ""
+                    print(var_salesperson,"---", rec.move_id.invoice_user_id)
                     rec.eval_function = None
                     print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
             else:
