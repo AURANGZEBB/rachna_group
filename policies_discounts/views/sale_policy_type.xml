@@ -21,6 +21,7 @@
 						<field name="name" required="1"/>
 						<field name="description"/>
 						<field name="calc_type" required="1"/>
+						<field name="company_id" required="1" readonly="1"/>
 					</group>
 				</group>
 			</form>

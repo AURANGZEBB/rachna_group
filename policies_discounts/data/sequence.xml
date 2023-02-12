@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_sale_policy_comp_1" model="ir.sequence">
+            <field name="name">Sequence Sale Policy</field>
+            <field name="code">sequence.sale.policy</field>
+            <field name="prefix">POL-RAC-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="1"/>
+        </record>
+        <record id="sequence_sale_policy_comp_2" model="ir.sequence">
+            <field name="name">Sequence Sale Policy</field>
+            <field name="code">sequence.sale.policy</field>
+            <field name="prefix">POL-RF-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="2"/>
+        </record>
+        <record id="sequence_sale_policy_comp_3" model="ir.sequence">
+            <field name="name">Sequence Sale Policy</field>
+            <field name="code">sequence.sale.policy</field>
+            <field name="prefix">POL-RAB-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="3"/>
+        </record>
+    </data>
+</odoo>

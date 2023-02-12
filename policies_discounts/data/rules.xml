@@ -1,0 +1,25 @@
+<odoo>
+    <record id="sale_policy_rule" model="ir.rule">
+        <field name="name">Sale Policy multi-company</field>
+        <field name="model_id" ref="model_sale_policy"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="sale_policy_line" model="ir.rule">
+        <field name="name">Sale Policy Line multi-company</field>
+        <field name="model_id" ref="model_sale_policy_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="sale_policy_type" model="ir.rule">
+        <field name="name">Sale Policy Type multi-company</field>
+        <field name="model_id" ref="model_sale_policy_type"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="sale_policy_benefit" model="ir.rule">
+        <field name="name">Sale Policy Benefit multi-company</field>
+        <field name="model_id" ref="model_sale_policy_benefit"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

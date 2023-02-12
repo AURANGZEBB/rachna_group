@@ -26,6 +26,7 @@
 						<field name="quantity" required="1"/>
 						<field name="value" required="1"/>
 						<field name="total_value" readonly="1" force_save="1"/>
+						<field name="company_id" readonly="1"/>
 					</group>
 				</group>
 			</form>

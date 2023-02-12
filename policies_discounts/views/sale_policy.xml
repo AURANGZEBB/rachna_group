@@ -5,9 +5,10 @@
 	    <field name="model">sale.policy</field>
 	    <field name="arch" type="xml">
 			<tree>
-				<field name="name" required="1"/>
+				<field name="name"/>
 				<field name="description"/>
 				<field name="policy_type"/>
+				<field name="policy_total_advance"/>
 				<field name="product_ids"/>
 				<field name="exclude_policies"/>
 			</tree>
@@ -21,8 +22,11 @@
 			<form>
 				<header>
                     <button name="action_confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', 'not in', 'draft')]}"/>
-                    <button name="action_reset" string="Reset" type="object" attrs="{'invisible': [('state', 'not in', 'confirm')]}"/>
-                    <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', 'confirm')]}"/>
+                    <button name="get_policy_advance" string="Get Policy Advance Balance" type="object" class="btn-primary" attrs="{'invisible': [('state', 'not in', ['confirm'])]}"/>
+                    <button name="clear_product_ids" string="Clear Product IDS" type="object" class="btn-primary" attrs="{'invisible': [('state', 'not in', 'draft')]}"/>
+                    <button name="action_reset" string="Reset" type="object" attrs="{'invisible': [('state', 'not in', ['confirm', 'close'])]}"/>
+                    <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', 'draft')]}"/>
+                    <button name="action_close" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', 'confirm')]}"/>
 <!--                    <button name="action_select_all_products" string="Select All Products" type="object" attrs="{'invisible': [('state', 'not in', 'draft')]}"/>-->
 <!--                    <button name="action_clear_products" string="Clear All Products" type="object" attrs="{'invisible': [('state', 'not in', 'draft')]}"/>-->
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm" readonly="1"/>
@@ -30,32 +34,49 @@
                 <sheet>
 					<group>
 						<group>
-							<field name="name" required="1"/>
+							<field name="name"/>
 							<field name="description"/>
+							<field name="company_id" readonly="1"/>
+							<field name="calc_type" invisible="1"/>
+							<field name="applicable_date_from" attrs="{'invisible': [('calc_type', 'not in', 'psi')], 'required': [('calc_type', 'in', 'psi')] }"/>
+							<field name="applicable_date_to" attrs="{'invisible': [('calc_type', 'not in', 'psi')], 'required': [('calc_type', 'in', 'psi')]}"/>
 						</group>
 						<group>
 							<field name="policy_type"/>
-							<field name="product_ids"/>
-							<field name="exclude_policies"/>
+							<field name="policy_total_advance"/>
+							<field name="product_ids">
+								<tree>
+									<field name="name"/>
+									<field name="default_code"/>
+								</tree>
+							</field>
+							<field name="exclude_policies">
+								<tree>
+									<field name="description"/>
+								</tree>
+							</field>
 						</group>
 					</group>
-					<group>
-						<label for="policy_line_ids"/>
-						<field name="policy_line_ids">
-							<tree editable="bottom">
-								<field name="name"/>
-								<field name="description"/>
-								<field name="date_from"/>
-								<field name="date_to"/>
-								<field name="benefit_id"/>
-								<field name="policy_id" invisible="1"/>
-								<field name="quantity"/>
-								<field name="value"/>
-								<field name="total_value"/>
-								<field name="parent_state" invisible="1"/>
-							</tree>
-						</field>
-					</group>
+					<label for="policy_line_ids"/>
+					<field name="policy_line_ids">
+						<tree editable="bottom">
+							<field name="name"/>
+							<field name="description"/>
+							<field name="calc_type" optional="hide"/>
+							<field name="applicable_date_from" invisible="1"/>
+							<field name="applicable_date_to" invisible="1"/>
+							<field name="date_from" attrs="{'column_invisible': [('parent.calc_type', 'not in', 'invoice')], 'required': [('parent.calc_type', 'in', 'invoice')]}"/>
+							<field name="date_to" attrs="{'column_invisible': [('parent.calc_type', 'not in', 'invoice')], 'required': [('parent.calc_type', 'in', 'invoice')]}"/>
+							<field name="benefit_id"/>
+							<field name="policy_id" invisible="1"/>
+							<field name="total_advance_against_line" invisible="1"/>
+							<field name="policy_line_balance" readonly="1"/>
+							<field name="quantity"/>
+							<field name="value"/>
+							<field name="total_value"/>
+							<field name="parent_state" invisible="1"/>
+						</tree>
+					</field>
 				</sheet>
 			</form>
         </field>

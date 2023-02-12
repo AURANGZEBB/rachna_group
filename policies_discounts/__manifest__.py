@@ -19,9 +19,12 @@ You could use this simplified accounting in case you work with an (external) acc
     'data': [
         #'security/security.xml',
         'security/ir.model.access.csv',
+        'data/sequence.xml',
+        'data/rules.xml',
         'views/sale_policy_type.xml',
         'views/sale_policy_benefits.xml',
         'views/sale_policy.xml',
+        'views/extend_sale_order.xml',
     ],
     'demo': [],
     'installable': True,
