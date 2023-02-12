@@ -32,7 +32,7 @@ class CounterParty(models.Model):
         ('through_loan', 'Through Loan/Advance'),
         ('advance_cash_or_bank', 'Loan/Advance in Cash/Bank'),
         ('advance_against_policy', 'Advance Against Policy'),
-        ('transfer_advance_between_policy', 'Transfer Advance Between Policy'),
+        # ('transfer_advance_between_policy', 'Transfer Advance Between Policy'),
         ('return_advance_against_policy', 'Return Advance Against Policy'),
         ], string="Counter Party Adj. Type", help="Counter Adjustment Type", required=True, default="")
 
@@ -261,13 +261,17 @@ class CounterParty(models.Model):
             # 'type': 'entry',
             'state': 'draft',
             'ref': str(self.detail) + '- ' +" " + '- ' + 'Transferred',
-            'line_ids': [(0, 0, {
-                'name': self.name or self.detail,
-                'partner_id': self.debit_partner.id,
-                'account_id': self.account_debit.id,
-                'debit': self.amount}),
+            'line_ids': [
+                        (0, 0, {
+                            'name': self.name or self.detail,
+                            'policy_id': self.debit_policy.id if self.debit_policy else "",
+                            'partner_id': self.debit_partner.id,
+                            'account_id': self.account_debit.id,
+                            'debit': self.amount
+                        }),
                          (0, 0, {
                              # 'name': self.name or self.detail,
+                             'policy_id': self.credit_policy.id if self.credit_policy else "",
                              'partner_id': self.credit_partner.id,
                              'account_id': self.account_credit.id,
                              'credit': self.amount,
