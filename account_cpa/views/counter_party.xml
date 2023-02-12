@@ -49,14 +49,14 @@
 							<field name="detail" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 							<field name="counter_adj_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 							<field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-							<field name="policy_id" string="Policy" options="{'no_create': True, 'no_quick_create': True}" attrs="{'invisible': [('counter_adj_type', 'not in', ['advance_against_policy', 'return_advance_against_policy'])],'readonly': [('state', 'not in', ['draft'])]}"/>
+							<field name="policy_id" string="Policy" options="{'no_create': True, 'no_quick_create': True}" attrs="{'invisible': [('counter_adj_type', 'not in', ['advance_against_policy','advance_against_policy_through_loan' ,'return_advance_against_policy'])],'readonly': [('state', 'not in', ['draft'])]}"/>
 							<field name="cash_bank_journals_ids" attrs="{'readonly': [('state', '!=', 'draft'),
 																		(('counter_adj_type', '!=', 'advance_cash_or_bank'))],
 																		'invisible':[('counter_adj_type', 'not in', ['advance_cash_or_bank', 'advance_against_policy', 'return_advance_against_policy'])]}"
 																		 domain="[('type', 'in', ['bank', 'cash'])]"/>
 							<field name="counter_party" attrs="{'readonly': [('state', '!=', 'draft'),
 																('counter_adj_type', '!=', 'through_loan')],
-																'invisible':[('counter_adj_type', '!=', 'through_loan')]}"/>
+																'invisible':[('counter_adj_type', 'not in', ['through_loan', 'advance_against_policy_through_loan'])]}"/>
 						</group>
 					</group>
 					<group>

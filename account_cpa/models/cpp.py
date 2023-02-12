@@ -33,6 +33,7 @@ class CounterParty(models.Model):
         ('advance_cash_or_bank', 'Loan/Advance in Cash/Bank'),
         ('advance_against_policy', 'Advance Against Policy'),
         # ('transfer_advance_between_policy', 'Transfer Advance Between Policy'),
+        ('advance_against_policy_through_loan', 'Advance Against Policy Through Loan'),
         ('return_advance_against_policy', 'Return Advance Against Policy'),
         ], string="Counter Party Adj. Type", help="Counter Adjustment Type", required=True, default="")
 
@@ -87,6 +88,12 @@ class CounterParty(models.Model):
                 raise ValidationError("There is no Loan/Advance Account on Selected Customer/Vendors Form !!!!")
             if rec.payment_type == "receive":
                 if rec.counter_adj_type == "through_loan":
+                    counter_journal = journals.search([('name', '=', 'Counter Misc. Operations')])
+                    rec.debit_partner = rec.counter_party.id
+                    rec.account_debit = rec.counter_party.advance_loan_account.id
+                    rec.journal_id = counter_journal
+
+                elif rec.counter_adj_type == "advance_against_policy_through_loan":
                     counter_journal = journals.search([('name', '=', 'Counter Misc. Operations')])
                     rec.debit_partner = rec.counter_party.id
                     rec.account_debit = rec.counter_party.advance_loan_account.id
@@ -180,6 +187,18 @@ class CounterParty(models.Model):
                             rec.account_credit = rec.partner_id.property_account_receivable_id.id
                         else:
                             raise ValidationError("Accounts are not selected on Partner Form !!!!")
+
+                elif rec.counter_adj_type == "advance_against_policy_through_loan":
+                    if rec.policy_id:
+                        rec.credit_policy = rec.policy_id.id
+                        rec.debit_policy = rec.policy_id.id
+                    if rec.partner_id:
+                        rec.credit_partner = rec.partner_id.id
+                        if rec.partner_id.property_account_receivable_id:
+                            rec.account_credit = rec.partner_id.property_account_receivable_id.id
+                        else:
+                            raise ValidationError("Accounts are not selected on Partner Form !!!!")
+
 
 
             elif rec.payment_type == "pay":
