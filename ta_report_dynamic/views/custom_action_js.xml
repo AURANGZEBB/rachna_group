@@ -1,0 +1,15 @@
+<odoo>
+  <data>
+    <record id="action_ta_party_ledger" model="ir.actions.client">
+      <field name="name">Party Ledger</field>
+      <field name="tag">ta_party_ledger.action</field>
+    </record>
+    <menuitem
+            name="Party Ledger (Rachna)"
+            id="ta_party_ledger_menu_root"
+            parent="account.menu_finance_reports"
+            action="action_ta_party_ledger"
+            sequence="0"
+      />
+  </data>
+</odoo>

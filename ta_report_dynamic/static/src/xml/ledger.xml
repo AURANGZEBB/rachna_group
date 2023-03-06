@@ -1,0 +1,235 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<templates xml:space="preserve">
+  <t t-name="LedgerCust" class="hello-world">
+    <div>
+           <div>
+               <h3>
+                   Party Ledger
+               </h3>
+           </div>
+           <div>
+               <div class="filter_view_tb"></div>
+           </div>
+           <br></br>
+           <div>
+               <div class="table_view"></div>
+           </div>
+       </div>
+    </t>
+    <t t-name="filter_view">
+       <div>
+           <div class="col-4">
+               <label for="partner_id">Customer:</label>
+                    <select id="partner_id" class="form-control">
+                        <option value="0">None</option>
+                        <t t-foreach="partners" t-as="partner">
+                            <option t-att-value="partner.id">
+                                <t t-esc="partner.name"/>
+                            </option>
+                        </t>
+                    </select>
+               <button class="apply_filter">Apply Filter</button>
+               <button class="print_view">Print</button>
+           </div>
+       </div>
+    </t>
+    
+    <t t-name="LedgerTable">
+       <div>
+           <div class="table_main_view">
+               <div class="row">
+                   <div class="col-3"></div>
+                   <div class="col-6" style="text-align: center;">
+                       <h3><t t-esc="company_name"/></h3>
+                   </div>
+                   <div class="col-3"></div>
+               </div>
+               <div class="row">
+                   <div class="col-3"></div>
+                   <div class="col-6" style="text-align: center;">
+                       <h4>Party Ledger:</h4>
+                   </div>
+                   <div class="col-3"></div>
+               </div>
+               <div class="row">
+                   <div class="col-3"></div>
+                   <div class="col-6" style="text-align: center;">
+                       <h4><t t-esc="partner_name"/></h4>
+                   </div>
+                   <div class="col-3"></div>
+               </div>
+               <table cellspacing="0" width="100%">
+                   <thead>
+                       <tr>
+                           <th>Date</th>
+                           <th>Inv Number</th>
+                           <th>Product</th>
+                           <th>Qty</th>
+                           <th>UOM</th>
+                           <th>Rate</th>
+                           <th>Amount</th>
+                           <th>Amount Total</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <t t-if="len_invoices_data">
+                           <tr><td><h3>Customer Invoices</h3></td></tr>
+
+                           <t t-foreach="invoices_data" t-as="inv">
+                               <tr style="border: 1px solid black;">
+                                   <td>
+                                       <t t-esc="inv['invoice_date']"/>
+                                   </td>
+                                   <td style="border: 0px solid black;">
+                                        <a href="#" t-esc="inv['number']" class="view-source" t-att-data-move-id="inv['id']"/>
+                                   </td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
+                                   <td>
+                                       <t t-esc="inv['amount_total']"/>
+                                   </td>
+                                   <t t-foreach="inv['invoice_lines']" t-as="line">
+                                       <tr>
+                                           <td></td>
+                                           <td></td>
+                                           <td>
+                                               <t t-esc="line['product']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['quantity']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['uom']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['price_unit']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['price_subtotal']"/>
+                                           </td>
+                                       </tr>
+                                   </t>
+                               </tr>
+                           </t>
+                           <tr style="border-top: 5px solid black;">
+                               <td></td>
+                               <td></td>
+                               <td></td>
+                               <td></td>
+                               <td><b>Total</b></td>
+                               <td></td>
+                               <td></td>
+                               <td><b><t t-esc="invoices_total"/></b></td>
+                           </tr>
+                       </t>
+                       <t t-if="len_credit_notes_data">
+                           <tr><td><h3>Credit Notes</h3></td></tr>
+
+                           <t t-foreach="credit_notes_data" t-as="inv">
+                               <tr style="border: 1px solid black;">
+                                   <td>
+                                       <t t-esc="inv['invoice_date']"/>
+                                   </td>
+                                   <td style="border: 0px solid black;">
+                                        <a href="#" t-esc="inv['number']" class="view-source" t-att-data-move-id="inv['id']"/>
+                                   </td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
+                                   <td>
+                                       <t t-esc="inv['amount_total']"/>
+                                   </td>
+                                   <t t-foreach="inv['invoice_lines']" t-as="line">
+                                       <tr>
+                                           <td></td>
+                                           <td></td>
+                                           <td>
+                                               <t t-esc="line['product']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['quantity']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['uom']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['price_unit']"/>
+                                           </td>
+                                           <td>
+                                               <t t-esc="line['price_subtotal']"/>
+                                           </td>
+                                       </tr>
+                                   </t>
+                               </tr>
+                           </t>
+                           <tr style="border-top: 5px solid black;">
+                               <td></td>
+                               <td></td>
+                               <td></td>
+                               <td></td>
+                               <td><b>Total</b></td>
+                               <td></td>
+                               <td></td>
+                               <td><b><t t-esc="credit_notes_total"/></b></td>
+                           </tr>
+                       </t>
+                       <t t-if="len_data_payments_or_other_entries">
+                           <tr><td><h3>Payments/Other Entries</h3></td></tr>
+
+                           <t t-foreach="data_payments_or_other_entries" t-as="entry">
+                               <tr style="border: 1px solid black;">
+                                   <td width="30px">
+                                       <t t-esc="entry['move_date']"/>
+                                   </td>
+                                   <td style="border: 0px solid black; width: 30px;">
+                                        <t t-esc="entry['move_name']"/>
+                                   </td>
+                                   <td width="30px">
+                                       <t t-esc="entry['account_id']"/>
+                                   </td>
+                                   <td width="30px">
+                                   </td>
+                                   <td width="30px">
+                                       <t t-esc="entry['ref']"/>
+                                   </td>
+                                   <td width="30px">
+                                       <t t-esc="entry['name']"/>
+                                   </td>
+                                   <td width="30px"></td>
+                                   <td width="30px">
+                                       <t t-esc="entry['amount']"/>
+                                   </td>
+                               </tr>
+                           </t>
+                           <tr style="border-top: 5px solid black;">
+                               <td></td>
+                               <td></td>
+                               <td></td>
+                               <td></td>
+                               <td><b>Total</b></td>
+                               <td></td>
+                               <td></td>
+                               <td><b><t t-esc="net_total_payments_or_other_entries"/></b></td>
+                           </tr>
+                       </t>
+                       <tr style="border-top: 5px solid black; border-bottom: 5px solid black;">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td><h4>Net Balance</h4></td>
+                           <td></td>
+                           <td></td>
+                           <td><b><t t-esc="net_balance"/></b></td>
+                       </tr>
+                   </tbody>
+               </table>
+           </div>
+       </div>
+   </t>
+</templates>
