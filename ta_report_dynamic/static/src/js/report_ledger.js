@@ -24,11 +24,14 @@ odoo.define('report_ledger.main', function (require) {
                apply_filter: function () {
 //                   console.log(this)
                    var selected_partner = this.$('#partner_id option:selected').val();
+                   var date_start = document.getElementById("date_start").value;
+                   var date_end = document.getElementById("date_end").value;
+//                   console.log("///////////////////", date_start)
                    var self = this;
                    self._rpc({
                                model: 'dynamic.report.ledger',
                                method: 'ta_get_dynamic_report_values',
-                               args: [1,selected_partner],
+                               args: [1,selected_partner,date_start,date_end],
                            }).then(function(datas) {
 //                           console.log("dataaaaaa", datas)
                                self.$('.table_view').html(QWeb.render('LedgerTable', datas));

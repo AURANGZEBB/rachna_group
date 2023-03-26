@@ -17,19 +17,29 @@
        </div>
     </t>
     <t t-name="filter_view">
-       <div>
+       <div class="row">
            <div class="col-4">
                <label for="partner_id">Customer:</label>
-                    <select id="partner_id" class="form-control">
-                        <option value="0">None</option>
-                        <t t-foreach="partners" t-as="partner">
-                            <option t-att-value="partner.id">
-                                <t t-esc="partner.name"/>
-                            </option>
-                        </t>
-                    </select>
-               <button class="apply_filter">Apply Filter</button>
-               <button class="print_view">Print</button>
+                <select id="partner_id" class="form-control">
+                    <option value="0">None</option>
+                    <t t-foreach="partners" t-as="partner">
+                        <option t-att-value="partner.id">
+                            <t t-esc="partner.name"/>
+                        </option>
+                    </t>
+                </select>
+                <button class="apply_filter">Apply Filter</button>
+                <button class="print_view">Print</button>
+           </div>
+           <div class="col-4">
+               <div>
+                   <label for="date_start">Date Start:</label>
+                   <input type="date" id="date_start" name="date_start"/>
+               </div>
+               <div>
+                   <label for="date_end">Date End :</label>
+                   <input type="date" id="date_end" name="date_end"/>
+               </div>
            </div>
        </div>
     </t>
@@ -58,175 +68,114 @@
                    </div>
                    <div class="col-3"></div>
                </div>
+               <div class="row">
+                   <div class="col-3"></div>
+                   <div class="col-6" style="text-align: center;">
+                       <h4>Address:<t t-esc="partner_address"/></h4>
+                       <h4>Phone:<t t-esc="partner_phone"/></h4>
+                   </div>
+                   <div class="col-3"></div>
+               </div>
+               <div class="row">
+                   <div class="col-1"></div>
+                   <div class="col-1"><h5>Sales Team:</h5></div>
+                   <div class="col-1"><t t-esc="sales_team"/></div>
+               </div>
+               <div class="row">
+                   <div class="col-1"></div>
+                   <div class="col-1"><h5>Sales Person:</h5></div>
+                   <div class="col-1"><t t-esc="sales_person"/></div>
+                   <div class="col-3"></div>
+                   <div class="col-2"></div>
+                   <div class="col-1"><h5>Payment Terms:</h5></div>
+                   <div class="col-1"><t t-esc="payment_terms"/></div>
+               </div>
+               <div class="row">
+                   <div class="col-1"></div>
+                   <div class="col-1"><h5>Date From:</h5></div>
+                   <div class="col-1"><t t-esc="date_start"/></div>
+                   <div class="col-3"></div>
+                   <div class="col-2"></div>
+                   <div class="col-1"><h5>Date To:</h5></div>
+                   <div class="col-1"><t t-esc="date_end"/></div>
+               </div>
                <table cellspacing="0" width="100%">
                    <thead>
                        <tr>
                            <th>Date</th>
-                           <th>Inv Number</th>
+                           <th>Voucher#</th>
                            <th>Product</th>
+                           <th>Description</th>
                            <th>Qty</th>
                            <th>UOM</th>
                            <th>Rate</th>
                            <th>Amount</th>
-                           <th>Amount Total</th>
+                           <th>Policy</th>
+                           <th>Disc%</th>
+                           <th>Discount</th>
+                           <th>Debit</th>
+                           <th>Credit</th>
+                           <th>Balance</th>
                        </tr>
                    </thead>
                    <tbody>
-                       <t t-if="len_invoices_data">
-                           <tr><td><h3>Customer Invoices</h3></td></tr>
-
-                           <t t-foreach="invoices_data" t-as="inv">
-                               <tr style="border: 1px solid black;">
-                                   <td>
-                                       <t t-esc="inv['invoice_date']"/>
-                                   </td>
-                                   <td style="border: 0px solid black;">
-                                        <a href="#" t-esc="inv['number']" class="view-source" t-att-data-move-id="inv['id']"/>
-                                   </td>
-                                   <td></td>
-                                   <td></td>
-                                   <td></td>
-                                   <td></td>
-                                   <td></td>
-                                   <td>
-                                       <t t-esc="inv['amount_total']"/>
-                                   </td>
-                                   <t t-foreach="inv['invoice_lines']" t-as="line">
-                                       <tr>
-                                           <td></td>
-                                           <td></td>
-                                           <td>
-                                               <t t-esc="line['product']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['quantity']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['uom']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['price_unit']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['price_subtotal']"/>
-                                           </td>
-                                       </tr>
-                                   </t>
-                               </tr>
-                           </t>
-                           <tr style="border-top: 5px solid black;">
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td><b>Total</b></td>
-                               <td></td>
-                               <td></td>
-                               <td><b><t t-esc="invoices_total"/></b></td>
-                           </tr>
-                       </t>
-                       <t t-if="len_credit_notes_data">
-                           <tr><td><h3>Credit Notes</h3></td></tr>
-
-                           <t t-foreach="credit_notes_data" t-as="inv">
-                               <tr style="border: 1px solid black;">
-                                   <td>
-                                       <t t-esc="inv['invoice_date']"/>
-                                   </td>
-                                   <td style="border: 0px solid black;">
-                                        <a href="#" t-esc="inv['number']" class="view-source" t-att-data-move-id="inv['id']"/>
-                                   </td>
-                                   <td></td>
-                                   <td></td>
-                                   <td></td>
-                                   <td></td>
-                                   <td></td>
-                                   <td>
-                                       <t t-esc="inv['amount_total']"/>
-                                   </td>
-                                   <t t-foreach="inv['invoice_lines']" t-as="line">
-                                       <tr>
-                                           <td></td>
-                                           <td></td>
-                                           <td>
-                                               <t t-esc="line['product']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['quantity']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['uom']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['price_unit']"/>
-                                           </td>
-                                           <td>
-                                               <t t-esc="line['price_subtotal']"/>
-                                           </td>
-                                       </tr>
-                                   </t>
-                               </tr>
-                           </t>
-                           <tr style="border-top: 5px solid black;">
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td><b>Total</b></td>
-                               <td></td>
-                               <td></td>
-                               <td><b><t t-esc="credit_notes_total"/></b></td>
-                           </tr>
-                       </t>
-                       <t t-if="len_data_payments_or_other_entries">
-                           <tr><td><h3>Payments/Other Entries</h3></td></tr>
-
-                           <t t-foreach="data_payments_or_other_entries" t-as="entry">
-                               <tr style="border: 1px solid black;">
-                                   <td width="30px">
-                                       <t t-esc="entry['move_date']"/>
-                                   </td>
-                                   <td style="border: 0px solid black; width: 30px;">
-                                        <t t-esc="entry['move_name']"/>
-                                   </td>
-                                   <td width="30px">
-                                       <t t-esc="entry['account_id']"/>
-                                   </td>
-                                   <td width="30px">
-                                   </td>
-                                   <td width="30px">
-                                       <t t-esc="entry['ref']"/>
-                                   </td>
-                                   <td width="30px">
-                                       <t t-esc="entry['name']"/>
-                                   </td>
-                                   <td width="30px"></td>
-                                   <td width="30px">
-                                       <t t-esc="entry['amount']"/>
-                                   </td>
-                               </tr>
-                           </t>
-                           <tr style="border-top: 5px solid black;">
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td><b>Total</b></td>
-                               <td></td>
-                               <td></td>
-                               <td><b><t t-esc="net_total_payments_or_other_entries"/></b></td>
-                           </tr>
-                       </t>
-                       <tr style="border-top: 5px solid black; border-bottom: 5px solid black;">
+<!--                       <t t-if="len_lines_data">-->
+                       <tr style="border: 1px solid black;">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td><strong>Opening Balance</strong></td>
                            <td></td>
                            <td></td>
                            <td></td>
                            <td></td>
-                           <td><h4>Net Balance</h4></td>
                            <td></td>
                            <td></td>
-                           <td><b><t t-esc="net_balance"/></b></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td><strong><t t-esc="opening_balance"/></strong></td>
                        </tr>
+
+                       <t t-foreach="lines_data" t-as="inv">
+                           <tr style="border: 1px solid black;">
+                               <td style="width: 8%">
+                                   <t t-esc="inv['date']"/>
+                               </td>
+                               <td style="width: 8%">
+                                    <a href="#" t-esc="inv['name']" class="view-source" t-att-data-move-id="inv['id']"/>
+                               </td>
+                               <td style="width: 8%"><t t-esc="inv['product']"/></td>
+                               <td style="width: 25%"><t t-esc="inv['description']"/></td>
+                               <td style="width: 3%"><t t-esc="inv['quantity']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['uom']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['price_unit']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['amount']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['policy']"/></td>
+                               <td style="width: 5%"></td>
+                               <td style="width: 5%"></td>
+                               <td style="width: 5%"><t t-esc="inv['debit']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['credit']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['net_balance']"/></td>
+                           </tr>
+                        </t>
+                        <tr style="border: 1px solid black;">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td><strong>Closing Balance</strong></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td><strong><t t-esc="closing_balance"/></strong></td>
+                        </tr>
+<!--                       </t>-->
                    </tbody>
                </table>
            </div>
