@@ -24,6 +24,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/mass_action_account_move_line.xml',
         'views/counter_party.xml',
         'views/cpp.xml',
+        'views/extend_account_move_form.xml',
         'views/account_move_line_inherit.xml',
         'views/ledger_inherit.xml',
         'views/search_view_inherit_ledger.xml',
