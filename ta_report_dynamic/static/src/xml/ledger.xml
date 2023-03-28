@@ -106,13 +106,14 @@
                            <th>Voucher#</th>
                            <th>Product</th>
                            <th>Description</th>
+                           <th>Policy</th>
                            <th>Qty</th>
                            <th>UOM</th>
                            <th>Rate</th>
-                           <th>Amount</th>
-                           <th>Policy</th>
+                           <th>Gross Amount</th>
                            <th>Disc%</th>
                            <th>Discount</th>
+                           <th>Net Amount</th>
                            <th>Debit</th>
                            <th>Credit</th>
                            <th>Balance</th>
@@ -147,13 +148,14 @@
                                </td>
                                <td style="width: 8%"><t t-esc="inv['product']"/></td>
                                <td style="width: 25%"><t t-esc="inv['description']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['policy']"/></td>
                                <td style="width: 3%"><t t-esc="inv['quantity']"/></td>
                                <td style="width: 5%"><t t-esc="inv['uom']"/></td>
                                <td style="width: 5%"><t t-esc="inv['price_unit']"/></td>
-                               <td style="width: 5%"><t t-esc="inv['amount']"/></td>
-                               <td style="width: 5%"><t t-esc="inv['policy']"/></td>
-                               <td style="width: 5%"></td>
-                               <td style="width: 5%"></td>
+                               <td style="width: 5%"><t t-esc="inv['gross_amount']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['discount_percent']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['discount_amount']"/></td>
+                               <td style="width: 5%"><t t-esc="inv['net_amount']"/></td>
                                <td style="width: 5%"><t t-esc="inv['debit']"/></td>
                                <td style="width: 5%"><t t-esc="inv['credit']"/></td>
                                <td style="width: 5%"><t t-esc="inv['net_balance']"/></td>
