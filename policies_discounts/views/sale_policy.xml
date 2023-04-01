@@ -38,6 +38,7 @@
 							<field name="description"/>
 							<field name="company_id" readonly="1"/>
 							<field name="calc_type" invisible="1"/>
+							<field name="slab_applicable"/>
 							<field name="applicable_date_from" attrs="{'invisible': [('calc_type', 'not in', 'psi')], 'required': [('calc_type', 'in', 'psi')] }"/>
 							<field name="applicable_date_to" attrs="{'invisible': [('calc_type', 'not in', 'psi')], 'required': [('calc_type', 'in', 'psi')]}"/>
 						</group>
@@ -67,6 +68,8 @@
 							<field name="applicable_date_to" invisible="1"/>
 							<field name="date_from" attrs="{'column_invisible': [('parent.calc_type', 'not in', 'invoice')], 'required': [('parent.calc_type', 'in', 'invoice')]}"/>
 							<field name="date_to" attrs="{'column_invisible': [('parent.calc_type', 'not in', 'invoice')], 'required': [('parent.calc_type', 'in', 'invoice')]}"/>
+							<field name="sale_slab_from" attrs="{'column_invisible': [('parent.slab_applicable', '=', True)], 'required': [('parent.slab_applicable', '=', True)]}"/>
+							<field name="sale_slab_to" attrs="{'column_invisible': [('parent.slab_applicable', '=', True)], 'required': [('parent.slab_applicable', '=', True)]}"/>
 							<field name="benefit_id"/>
 							<field name="policy_id" invisible="1"/>
 							<field name="total_advance_against_line" invisible="1"/>

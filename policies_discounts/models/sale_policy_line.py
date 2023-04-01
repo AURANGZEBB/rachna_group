@@ -6,7 +6,6 @@ class SalePolicyline(models.Model):
     name = fields.Char(string="name")
     description = fields.Char(string="Description")
     policy_id = fields.Many2one("sale.policy", string="Policy ID")
-
     parent_state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Running'),
@@ -42,3 +41,10 @@ class SalePolicyline(models.Model):
         for rec in self:
             if not rec.quantity <= 0 and not rec.value <= 0:
                 rec.total_value = rec.quantity * rec.value
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.policy_id.name + '-' + rec.policy_id.description + '-' + rec.benefit_id.name
+            result.append((rec.id, name))
+        return result

@@ -5,20 +5,23 @@
 	    <field name="model">sale.order</field>
 	    <field name="inherit_id" ref="sale.view_order_form"/>
 	    <field name="arch" type="xml">
+			<xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'not in', ['draft'])]}</attribute>
+            </xpath>
 			<xpath expr="//field[@name='partner_id']" position="after">
 				<field name="policy_id" options="{'no_create': True, 'no_quick_create': True}"
 					   attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
 				<field name="policy_total_advance" readonly="1" invisible="1"/>
 				<field name="policy_total_balance" readonly="1" invisible="1"/>
 			</xpath>
-			<xpath expr="//tree/field[@name='price_unit']" position="before">
+			<xpath expr="//tree/field[@name='price_unit']" position="after">
 				<field name="policy_id" invisible="1" options="{'no_create': True, 'no_quick_create': True}"
 					   attrs="{'readonly': [('state', 'not in', ['draft'])]}" domain="[('state', 'not in', ['confirm'])]"/>
 				<field name="policy_line_ids" widget="many2many_tags"
 					   options="{'no_create': True, 'no_quick_create': True}"
 					   attrs="{'readonly': [('state', 'not in', ['draft'])]}"
-					   domain="[('parent_state', 'not in', ['confirm']),('policy_id.product_ids', 'in', product_id)]"/>
-				<field name="policy_line_balance" readonly="1"/>
+					   domain="[('parent_state', 'in', ['confirm']),('policy_id.product_ids', 'in', product_id)]"/>
+				<field name="policy_line_balance" readonly="1" force_save="1"/>
 			</xpath>
         </field>
     </record>

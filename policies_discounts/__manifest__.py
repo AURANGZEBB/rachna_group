@@ -15,7 +15,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'category': 'Other',
     'website': 'https://www.ta.com',
     'images' : [],
-    'depends' : ['sale_management'],
+    'depends' : ['sale','sale_management', 'account', 'base_accounting_kit'],
     'data': [
         #'security/security.xml',
         'security/ir.model.access.csv',
