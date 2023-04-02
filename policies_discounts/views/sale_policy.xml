@@ -68,8 +68,8 @@
 							<field name="applicable_date_to" invisible="1"/>
 							<field name="date_from" attrs="{'column_invisible': [('parent.calc_type', 'not in', 'invoice')], 'required': [('parent.calc_type', 'in', 'invoice')]}"/>
 							<field name="date_to" attrs="{'column_invisible': [('parent.calc_type', 'not in', 'invoice')], 'required': [('parent.calc_type', 'in', 'invoice')]}"/>
-							<field name="sale_slab_from" attrs="{'column_invisible': [('parent.slab_applicable', '=', True)], 'required': [('parent.slab_applicable', '=', True)]}"/>
-							<field name="sale_slab_to" attrs="{'column_invisible': [('parent.slab_applicable', '=', True)], 'required': [('parent.slab_applicable', '=', True)]}"/>
+							<field name="sale_slab_from" attrs="{'column_invisible': [('parent.slab_applicable', '=', False)], 'required': [('parent.slab_applicable', '=', False)]}"/>
+							<field name="sale_slab_to" attrs="{'column_invisible': [('parent.slab_applicable', '=', False)], 'required': [('parent.slab_applicable', '=', False)]}"/>
 							<field name="benefit_id"/>
 							<field name="policy_id" invisible="1"/>
 							<field name="total_advance_against_line" invisible="1"/>

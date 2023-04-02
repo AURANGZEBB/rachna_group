@@ -8,6 +8,13 @@ class SaleOrder(models.Model):
     policy_total_advance = fields.Float(string="Policy Total Advance")
     policy_total_balance = fields.Float(string="Policy Total Balance")
 
+    def copy(self, default=None):
+        orders = super(SaleOrder, self).copy()
+        for o in orders:
+            o.order_line = [(5,0,0)]
+        return orders
+
+
     @api.onchange('order_line')
     def func_order_lines(self):
         flag = 0
@@ -23,17 +30,6 @@ class SaleOrder(models.Model):
                 line.policy_line_ids = [(5,0,0)]
                 line.policy_line_balance = ""
                 line.discount = ""
-            if previous_line:
-                if previous_line.policy_line_ids.ids == line.policy_line_ids.ids and previous_line.policy_line_balance == line.policy_line_balance:
-                    line_balance = line.policy_line_balance - line.price_subtotal
-                    line.policy_line_balance = line_balance if line_balance > 0 else 0
-
-            previous_line = line
-
-    # def _create_invoices(self):
-    #     rtn = super(SaleOrder, self)._create_invoices()
-    #     print(self.abc)
-    #     return rtn
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
@@ -60,28 +56,35 @@ class SaleOrderLine(models.Model):
                                                                         ('parent_state', 'not in', ['cancel']),
                                                                         ('partner_id', '=', self.order_partner_id.id),
                                                                         ('account_type.type', 'in', ['receivable'])])
-
+        invoices_and_creditnotes_lines = self.env['account.move.line'].search([
+                                                                        ('policy_id', '=', self.policy_id.id),
+                                                                        ('parent_state', 'not in', ['cancel']),
+                                                                        ('partner_id', '=', self.order_partner_id.id),
+                                                                        ('account_id.user_type_id.name', 'in', ['Income'])
+                                                                    ])
+        print(invoices_and_creditnotes_lines)
         for line in self.policy_line_ids:
             discount += line.benefit_id.value * 100
             self.discount = discount
             policy_line_advance = account_move_line_policy.filtered(lambda
-                                                                        x: x.parent_state in 'posted' and x.date >= line.date_from and x.date <= line.date_to and not x.policy_line_ids and (
+                                                                        x: x.parent_state == 'posted' and x.date >= line.date_from and x.date <= line.date_to and not x.policy_line_ids and (
                         x.credit >= line.sale_slab_from or x.debit >= line.sale_slab_from) and (
                                                                                        x.credit <= line.sale_slab_to or x.debit <= line.sale_slab_to))
-            invoices_and_creditnotes_lines = account_move_line_policy.filtered(
-                lambda x: line.id in x.policy_line_ids.ids)
-            previous_sale_order_lines_uninvoiced = self.search([('state', 'not in', ['cancel']),('id', '!=', self.order_id.order_line.ids),('policy_line_ids', 'in', line.ids)])
+            invoices_lines = invoices_and_creditnotes_lines.filtered(lambda x: line.display_name in x.policy_line_ids.mapped('display_name')).mapped('credit')
+            creditnotes_lines = invoices_and_creditnotes_lines.filtered(lambda x: line.display_name in x.policy_line_ids.mapped('display_name')).mapped('debit')
+            previous_sale_order_lines_uninvoiced = self.search([('state', 'not in', ['cancel']),('id', '!=', self.order_id.order_line.ids),('policy_line_ids', 'in', line.ids),('invoice_status', 'not in', ['invoiced'])])
             current_sale_order_lines = self.order_id.order_line.filtered(lambda x: x != self) if not self.ids else self.order_id.order_line
-
-            total_sale_order_lines_uninvoiced = sum(previous_sale_order_lines_uninvoiced.mapped('price_subtotal')) + sum(current_sale_order_lines.mapped(lambda x: x.price_unit * x.product_uom_qty * (1 - discount / 100)))
+            # print(current_sale_order_lines)
+            total_sale_order_lines_uninvoiced = sum(previous_sale_order_lines_uninvoiced.mapped('price_subtotal')) + sum(current_sale_order_lines.mapped(lambda x: x.price_unit * x.product_uom_qty * (1 - discount / 100) if line in x.policy_line_ids else 0))
+            print(total_sale_order_lines_uninvoiced, previous_sale_order_lines_uninvoiced, current_sale_order_lines)
             policy_line_advance_debit = sum(policy_line_advance.mapped('debit'))
             policy_line_advance_credit = sum(policy_line_advance.mapped('credit'))
             # print(policy_line_advance_debit, policy_line_advance_credit)
             net_total_policy_line_advance = policy_line_advance_credit - policy_line_advance_debit
-            policy_line_invoices = sum(invoices_and_creditnotes_lines.mapped('debit'))
-            policy_line_creditnotes = sum(invoices_and_creditnotes_lines.mapped('credit'))
+            policy_line_invoices = sum(invoices_lines)
+            policy_line_creditnotes = sum(creditnotes_lines)
             net_total_policy_line_invoices_and_creditnotes = policy_line_invoices - policy_line_creditnotes
-            policy_line_balance = net_total_policy_line_advance + net_total_policy_line_invoices_and_creditnotes - total_sale_order_lines_uninvoiced
+            policy_line_balance = net_total_policy_line_advance - net_total_policy_line_invoices_and_creditnotes - total_sale_order_lines_uninvoiced
             line.policy_line_balance = policy_line_balance
             line_balance = policy_line_balance
             if line_balance == 0:
@@ -98,14 +101,15 @@ class SaleOrderLine(models.Model):
             if self.price_subtotal > self.policy_line_balance and self.policy_line_ids:
                 raise ValidationError("Total Cannot be more than Balance Available !!!!")
 
-    @api.onchange('price_unit')
+    @api.onchange('price_unit', 'product_uom_qty')
     def onchange_price_unit(self):
-        if self.price_subtotal > self.policy_line_balance and self.policy_line_ids:
-            raise ValidationError("Total Cannot be more that Balance Available !!!!")
-        else:
-            self.policy_line_ids = [(5,0,0)]
-            self.policy_line_balance = ""
-            self.discount = ""
+        if self.policy_line_ids:
+            if self.price_subtotal > self.policy_line_balance:
+                raise ValidationError("Total Cannot be more that Balance Available !!!!")
+            else:
+                self.policy_line_ids = [(5,0,0)]
+                self.policy_line_balance = ""
+                self.discount = ""
 
     def _prepare_invoice_line(self, **optional_values):
         """
@@ -127,6 +131,7 @@ class SaleOrderLine(models.Model):
             'tax_ids': [(6, 0, self.tax_id.ids)],
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
+            'policy_id': self.policy_id.id if self.policy_id else "",
             'policy_line_ids': self.policy_line_ids,
             'policy_line_balance': self.policy_line_balance,
         }
