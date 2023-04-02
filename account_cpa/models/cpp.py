@@ -199,8 +199,6 @@ class CounterParty(models.Model):
                         else:
                             raise ValidationError("Accounts are not selected on Partner Form !!!!")
 
-
-
             elif rec.payment_type == "pay":
                 if rec.counter_adj_type == "through_loan":
                     rec.debit_partner = rec.partner_id.id
@@ -276,6 +274,7 @@ class CounterParty(models.Model):
             'name': self.name,
             'date': self.date or datetime.datetime.today(),
             'journal_id': self.journal_id.id,
+            'policy_id': self.policy_id.id if self.policy_id else "",
             # 'company_id': uid.company_id,
             # 'type': 'entry',
             'state': 'draft',

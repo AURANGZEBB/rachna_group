@@ -2,23 +2,61 @@
 import datetime
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    policy_id = fields.Many2one("sale.policy", string="Policy")
+    policy_id = fields.Many2one("sale.policy", string="Policy", store=True)
+    courier_number = fields.Char(string="Courier Number")
+
+    def copy(self, default=None):
+        invoices = super(AccountMove, self).copy()
+        for i in invoices:
+            i.invoice_line_ids = [(5,0,0)]
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     account_type = fields.Many2one("account.account.type", string="Account Type", related="account_id.user_type_id", store=True)
     product_category = fields.Many2one("product.category", string="Product Category", related="product_id.categ_id", store=True)
-    policy_id = fields.Many2one("sale.policy", string="Policy", related="move_id.policy_id")
+    policy_id = fields.Many2one("sale.policy", string="Policy")
     policy_line_ids = fields.Many2many("sale.policy.line", string="Policy Lines")
     policy_line_balance = fields.Float(string="Pol line Balance")
     sale_person_id = fields.Many2one("res.users", string="Sales Person ID", related="partner_id.user_id", store=True)
     sale_team_id = fields.Many2one("crm.team", string="Sales Team ID", related="partner_id.team_id", store=True)
     customer_rank = fields.Integer(string="Customer Rank", related="partner_id.customer_rank", store=True)
+    tax_amount_tmp = fields.Float(string="Temporary Tax Amount **  Jugar")
+    tax_line_amount = fields.Float(string="Tax Amount", related="tax_amount_tmp", store=True)
+
+    @api.onchange('quantity', 'price_unit')
+    def onchange_quantity(self):
+        if self.policy_line_ids:
+            if self.price_subtotal > self.policy_line_balance:
+                raise ValidationError("Total Cannot be more that Balance Available !!!!")
+            else:
+                self.policy_line_ids = [(5,0,0)]
+                self.policy_line_balance = ""
+                self.discount = ""
+
+    @api.onchange('tax_ids')
+    def onchange_tax_ids(self):
+        for rec in self:
+            tax_amount = 0.0
+        if rec.tax_ids:
+            for t in rec.tax_ids:
+                if t.amount_type == "percent":
+                    tax = t.amount / 100 * rec.quantity * rec.price_unit
+                    tax_amount += tax
+                    rec.tax_amount_tmp = tax_amount
+                elif t.amount_type == "division":
+                    tax = t.amount / (t.amount + 100) * rec.quantity * rec.price_unit
+                    tax_amount += tax
+                    rec.tax_amount_tmp = tax_amount
+        else:
+            rec.tax_amount_tmp = 0
+
+
 
     @api.depends('product_id', 'quantity' ,'price_unit', 'discount')
     def get_detail(self):
