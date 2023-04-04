@@ -25,7 +25,7 @@ class AccountMove(models.Model):
                                                                ('move_id', '!=', self.id)])
             balance = sum(balance_obj.mapped('balance'))
             rec.previous_balance = round(balance, ndigits=2)
-            rec.current_balance = round((balance + (-1 * rec.amount_total if rec.move_type in ['out_refund', 'in_invoice'] else rec.amount_total)),ndigits=2)
+            rec.current_balance = round((balance + rec.amount_residual),ndigits=2)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
