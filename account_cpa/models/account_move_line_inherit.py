@@ -9,11 +9,34 @@ class AccountMove(models.Model):
 
     policy_id = fields.Many2one("sale.policy", string="Policy", store=True)
     courier_number = fields.Char(string="Courier Number")
+    previous_balance = fields.Float(string="Previous Balance")
+    current_balance = fields.Float(string="Current Balance")
 
     def copy(self, default=None):
         invoices = super(AccountMove, self).copy()
         for i in invoices:
             i.invoice_line_ids = [(5,0,0)]
+            
+    def get_balance(self):
+        for rec in self:
+            balance_obj = rec.env['account.move.line'].search([('parent_state','in',['posted']),
+                                                               ('account_internal_type', 'in', ['payable','receivable']),
+                                                               ('partner_id', '=', self.partner_id.parent_id.id if self.partner_id.parent_id else self.partner_id.id),
+                                                               ('move_id', '!=', self.id)])
+            balance = sum(balance_obj.mapped('balance'))
+            rec.previous_balance = round(balance, ndigits=2)
+            rec.current_balance = round((balance + (-1 * rec.amount_total if rec.move_type in ['out_refund', 'in_invoice'] else rec.amount_total)),ndigits=2)
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        rtn = super(AccountMove, self)._onchange_partner_id()
+        self.get_balance()
+        return rtn
+
+    @api.onchange('amount_total')
+    def _onchange_amount_total(self):
+        for rec in self:
+            rec.get_balance()
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
