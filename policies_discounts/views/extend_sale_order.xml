@@ -15,12 +15,12 @@
 				<field name="policy_total_balance" readonly="1" invisible="1"/>
 			</xpath>
 			<xpath expr="//tree/field[@name='price_unit']" position="after">
-				<field name="policy_id" invisible="1" options="{'no_create': True, 'no_quick_create': True}"
+				<field name="policy_id" invisible="0" options="{'no_create': True, 'no_quick_create': True}"
 					   attrs="{'readonly': [('state', 'not in', ['draft'])]}" domain="[('state', 'not in', ['confirm'])]"/>
 				<field name="policy_line_ids" widget="many2many_tags"
 					   options="{'no_create': True, 'no_quick_create': True}"
 					   attrs="{'readonly': [('state', 'not in', ['draft'])]}"
-					   domain="[('parent_state', 'in', ['confirm']),('policy_id.product_ids', 'in', product_id)]"/>
+					   domain="[('parent_state', 'in', ['confirm']),('policy_id', '=', policy_id)]"/>
 				<field name="policy_line_balance" readonly="1" force_save="1"/>
 			</xpath>
         </field>

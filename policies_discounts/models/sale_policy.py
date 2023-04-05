@@ -82,9 +82,6 @@ class SalePolicy(models.Model):
                 'net_balance_advance': sum(credit_list) - sum(debit_list),
             }
 
-
-            # print(account_move_line_policy, debit_list, credit_list)
-
             return vals
 
     def name_get(self):

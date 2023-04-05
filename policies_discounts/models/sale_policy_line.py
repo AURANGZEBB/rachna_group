@@ -45,6 +45,6 @@ class SalePolicyline(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = rec.policy_id.name + '-' + rec.policy_id.description + '-' + rec.benefit_id.name
+            name = str(rec.policy_id.name) + '-' + str(rec.policy_id.description) + '-' + str(rec.benefit_id.name)
             result.append((rec.id, name))
         return result
