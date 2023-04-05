@@ -15,7 +15,8 @@
 				<field name="sale_team_id" optional="hide"/>
 				<field name="sale_person_id" optional="hide"/>
 				<field name="customer_rank" optional="hide"/>
-				<field name="policy_id" invisible="0"/>
+				<field name="policy_id" invisible="1"/>
+				<field name="policy_type" invisible="1"/>
 			</xpath>
         </field>
     </record>

@@ -8,6 +8,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     policy_id = fields.Many2one("sale.policy", string="Policy", store=True)
+    policy_type = fields.Many2one("sale.policy.type", string="Sale Policy Type", related="policy_id.policy_type", store=True)
     courier_number = fields.Char(string="Courier Number")
     previous_balance = fields.Float(string="Previous Balance")
     current_balance = fields.Float(string="Current Balance")
@@ -21,11 +22,11 @@ class AccountMove(models.Model):
         for rec in self:
             balance_obj = rec.env['account.move.line'].search([('parent_state','in',['posted']),
                                                                ('account_internal_type', 'in', ['payable','receivable']),
-                                                               ('partner_id', '=', self.partner_id.parent_id.id if self.partner_id.parent_id else self.partner_id.id),
+                                                               ('partner_id', '=', self.partner_id.id),
                                                                ('move_id', '!=', self.id)])
             balance = sum(balance_obj.mapped('balance'))
             rec.previous_balance = round(balance, ndigits=2)
-            rec.current_balance = round((balance + rec.amount_residual),ndigits=2)
+            rec.current_balance = round((balance + rec.amount_total),ndigits=2)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -44,6 +45,8 @@ class AccountMoveLine(models.Model):
     account_type = fields.Many2one("account.account.type", string="Account Type", related="account_id.user_type_id", store=True)
     product_category = fields.Many2one("product.category", string="Product Category", related="product_id.categ_id", store=True)
     policy_id = fields.Many2one("sale.policy", string="Policy")
+    policy_type = fields.Many2one("sale.policy.type", string="Sale Policy Type", related="policy_id.policy_type",
+                                  store=True)
     policy_line_ids = fields.Many2many("sale.policy.line", string="Policy Lines")
     policy_line_balance = fields.Float(string="Pol line Balance")
     sale_person_id = fields.Many2one("res.users", string="Sales Person ID", related="partner_id.user_id", store=True)
